@@ -9,11 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body { font-family: 'Segoe UI', system-ui, sans-serif; }
-    .tab-active { 
-      border-bottom: 3px solid #C9A227; 
-      color: #003087; 
-      font-weight: 600; 
-    }
+    .tab-active { border-bottom: 3px solid #C9A227; color: #003087; font-weight: 600; }
     .modal { animation: popIn 0.4s ease; }
     @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   </style>
@@ -24,10 +20,8 @@
   <header class="hidden md:block bg-white shadow-sm border-b">
     <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
       <div class="flex items-center gap-4">
-        <!-- Logo UNSTA -->
         <img src="https://i1.sndcdn.com/avatars-cLEbOjWz2zZMiHzD-wIsmGQ-t1080x1080.jpg" 
-             alt="Logo UNSTA" 
-             class="w-14 h-14 object-contain">
+             alt="Logo UNSTA" class="w-14 h-14 object-contain">
         <div>
           <h1 class="text-2xl font-bold text-[#003087]">UNSTA CUC</h1>
           <p class="text-sm text-gray-600">Sorteo Educativo</p>
@@ -46,12 +40,11 @@
     </div>
   </header>
 
-  <!-- Título + Logo en MÓVIL -->
+  <!-- Header Móvil -->
   <div class="md:hidden bg-white shadow-sm border-b py-5">
     <div class="max-w-md mx-auto px-6 text-center">
       <img src="https://i1.sndcdn.com/avatars-cLEbOjWz2zZMiHzD-wIsmGQ-t1080x1080.jpg" 
-           alt="Logo UNSTA" 
-           class="w-20 h-20 mx-auto mb-3 object-contain">
+           alt="Logo UNSTA" class="w-20 h-20 mx-auto mb-3 object-contain">
       <h1 class="text-3xl font-bold text-[#003087]">UNSTA CUC</h1>
       <p class="text-gray-600">Sorteo Educativo</p>
     </div>
@@ -124,12 +117,38 @@
           </button>
         </div>
         <p id="count" class="text-gray-500 mb-4">0 participantes</p>
-        <!-- Aquí va el resto de tu contenido anterior (ganador, tabla, historial) -->
+
+        <div id="ganador-section" class="hidden bg-gradient-to-r from-green-600 to-emerald-600 text-white p-8 rounded-3xl mb-6 text-center">
+          <p class="uppercase tracking-widest text-sm opacity-75">¡GANADOR/A DEL SORTEO!</p>
+          <div id="ganador-info" class="mt-4 text-4xl font-bold"></div>
+          <button onclick="nuevoSorteo()" class="mt-6 bg-white text-emerald-700 px-6 py-3 rounded-2xl font-semibold">Cerrar</button>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-6 py-4 text-left">Nombre Completo</th>
+                <th class="px-6 py-4 text-left">DNI</th>
+                <th class="px-6 py-4 text-left">Celular</th>
+                <th class="px-6 py-4 text-left">Email</th>
+                <th class="px-6 py-4 text-left">Interés</th>
+                <th class="px-6 py-4 text-left">Orientación</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-participantes" class="divide-y"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold mb-4 text-[#003087]">Historial de Sorteos</h2>
+        <div id="historial-container" class="space-y-3"></div>
       </div>
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal ¡SUERTE! -->
   <div id="suerte-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
     <div class="modal bg-white rounded-3xl shadow-2xl max-w-sm w-full mx-4 overflow-hidden">
       <div class="bg-[#003087] p-10 text-center">
@@ -148,17 +167,175 @@
   </footer>
 
   <script>
-    // Pega aquí todo tu script JavaScript anterior (cargarDatos, sortear, etc.)
-    let participantes = []
-    let historial = []
+    let participantes = [];
+    let historial = [];
 
-    // ... (tu código completo del script) ...
+    function cargarDatos() {
+      const actual = localStorage.getItem('participantesSorteoActual');
+      if (actual) participantes = JSON.parse(actual);
+      const hist = localStorage.getItem('historialSorteos');
+      if (hist) historial = JSON.parse(hist);
+      actualizarTabla();
+      actualizarHistorial();
+    }
+
+    function guardarDatos() {
+      localStorage.setItem('participantesSorteoActual', JSON.stringify(participantes));
+      actualizarTabla();
+    }
+
+    function guardarHistorial() {
+      localStorage.setItem('historialSorteos', JSON.stringify(historial));
+      actualizarHistorial();
+    }
+
+    function actualizarTabla() {
+      document.getElementById('count').textContent = `${participantes.length} participantes`;
+      const tbody = document.getElementById('tabla-participantes');
+      tbody.innerHTML = '';
+      participantes.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50';
+        tr.innerHTML = `
+          <td class="px-6 py-4">${p.nombreCompleto}</td>
+          <td class="px-6 py-4">${p.dni}</td>
+          <td class="px-6 py-4">${p.celular}</td>
+          <td class="px-6 py-4">${p.email || '-'}</td>
+          <td class="px-6 py-4">${p.carrera || '-'}</td>
+          <td class="px-6 py-4 font-medium">${p.orientacion || '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function actualizarHistorial() {
+      const container = document.getElementById('historial-container');
+      container.innerHTML = '';
+      if (historial.length === 0) {
+        container.innerHTML = `<p class="text-gray-500 text-center py-8">Aún no hay sorteos realizados</p>`;
+        return;
+      }
+      historial.slice().reverse().forEach((ronda, idx) => {
+        const div = document.createElement('div');
+        div.className = "bg-white rounded-2xl shadow p-5 flex justify-between items-center";
+        div.innerHTML = `
+          <div>
+            <p class="font-semibold">${ronda.fecha}</p>
+            <p class="text-sm text-gray-500">${ronda.cantidad} participantes • Ganador: ${ronda.ganador}</p>
+          </div>
+          <button onclick="descargarRonda(${historial.length - 1 - idx})" class="bg-[#003087] hover:bg-[#002266] text-white px-5 py-2 rounded-xl text-sm font-medium">
+            📥 Descargar
+          </button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function descargarRonda(index) {
+      const ronda = historial[index];
+      const data = ronda.participantes.map(p => ({
+        "Nombre Completo": p.nombreCompleto,
+        "DNI": p.dni,
+        "Celular": p.celular,
+        "Email": p.email,
+        "Qué quiere estudiar": p.carrera,
+        "Orientación Vocacional": p.orientacion,
+        "Fecha del Sorteo": ronda.fecha
+      }));
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Participantes");
+      XLSX.writeFile(wb, `Sorteo_${ronda.fecha.replace(/\//g, '-')}.xlsx`);
+    }
+
+    function sortear() {
+      if (participantes.length === 0) return alert('No hay participantes en esta ronda.');
+      const index = Math.floor(Math.random() * participantes.length);
+      const ganador = participantes[index];
+
+      document.getElementById('ganador-info').innerHTML = `
+        <div class="text-5xl mb-2">${ganador.nombreCompleto}</div>
+        <div class="text-xl">${ganador.dni} • ${ganador.carrera || 'Sin especificar'}</div>
+      `;
+      document.getElementById('ganador-section').classList.remove('hidden');
+
+      const fecha = new Date().toLocaleDateString('es-AR');
+      historial.push({
+        fecha: fecha,
+        cantidad: participantes.length,
+        ganador: ganador.nombreCompleto,
+        participantes: [...participantes]
+      });
+      guardarHistorial();
+
+      setTimeout(() => {
+        participantes = [];
+        guardarDatos();
+        alert(`¡Sorteo realizado!\nGanador: ${ganador.nombreCompleto}`);
+      }, 800);
+    }
+
+    function nuevoSorteo() {
+      document.getElementById('ganador-section').classList.add('hidden');
+    }
+
+    // Formulario
+    document.getElementById('form-registro').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const orientacionSeleccionada = document.querySelector('input[name="orientacion"]:checked');
+      const nuevo = {
+        nombreCompleto: document.getElementById('nombreCompleto').value.trim(),
+        dni: document.getElementById('dni').value.trim(),
+        celular: document.getElementById('celular').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        carrera: document.getElementById('carrera').value.trim(),
+        orientacion: orientacionSeleccionada ? orientacionSeleccionada.value : 'No respondido'
+      };
+
+      if (!nuevo.nombreCompleto || !nuevo.dni || !nuevo.celular) {
+        alert("Los campos Nombre Completo, DNI y Celular son obligatorios.");
+        return;
+      }
+      if (participantes.some(p => p.dni === nuevo.dni)) {
+        alert('⚠️ Ya existe una inscripción con ese DNI.');
+        return;
+      }
+
+      participantes.unshift(nuevo);
+      guardarDatos();
+      this.reset();
+      document.getElementById('suerte-modal').classList.remove('hidden');
+    });
+
+    function cerrarModal() {
+      document.getElementById('suerte-modal').classList.add('hidden');
+    }
+
+    function showTab(n) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+      document.getElementById(`tab-${n}`).classList.remove('hidden');
+      document.querySelectorAll('[id^="tab-btn-"]').forEach(btn => btn.classList.remove('tab-active'));
+      document.getElementById(`tab-btn-${n}`).classList.add('tab-active');
+    }
+
+    function generarQR() {
+      const qrcodeDiv = document.getElementById('qrcode');
+      qrcodeDiv.innerHTML = '';
+      new QRCode(qrcodeDiv, {
+        text: window.location.href,
+        width: 220,
+        height: 220,
+        colorDark: "#003087",
+        colorLight: "#ffffff",
+      });
+    }
 
     window.onload = function() {
-      cargarDatos()
-      generarQR()
-      showTab(0)
-    }
+      cargarDatos();
+      generarQR();
+      showTab(0);
+    };
   </script>
 </body>
 </html>
