@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteo Educativo - UNSTA CUC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode.js@1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; }
+    .tab-active { 
+      border-bottom: 3px solid #C9A227; 
+      color: #003087; 
+      font-weight: 600; 
+    }
+    .modal { animation: popIn 0.4s ease; }
+    @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- HEADER - Solo Escritorio -->
+  <header class="hidden md:block bg-white shadow-sm border-b">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <!-- Logo UNSTA -->
+        <img src="https://i1.sndcdn.com/avatars-cLEbOjWz2zZMiHzD-wIsmGQ-t1080x1080.jpg" 
+             alt="Logo UNSTA" 
+             class="w-14 h-14 object-contain">
+        <div>
+          <h1 class="text-2xl font-bold text-[#003087]">UNSTA CUC</h1>
+          <p class="text-sm text-gray-600">Sorteo Educativo</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <button onclick="showTab(0)" id="tab-btn-0" class="tab-active px-5 py-2 rounded-lg text-sm">📝 Registro</button>
+        <button onclick="showTab(1)" id="tab-btn-1" class="px-5 py-2 rounded-lg text-sm hover:text-[#003087]">⚙️ Administrar</button>
+        
+        <button onclick="sortear()" 
+          class="bg-[#C9A227] hover:bg-[#D4AF37] text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 shadow-md transition-all active:scale-95">
+          🎉 REALIZAR SORTEO
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Título + Logo en MÓVIL -->
+  <div class="md:hidden bg-white shadow-sm border-b py-5">
+    <div class="max-w-md mx-auto px-6 text-center">
+      <img src="https://i1.sndcdn.com/avatars-cLEbOjWz2zZMiHzD-wIsmGQ-t1080x1080.jpg" 
+           alt="Logo UNSTA" 
+           class="w-20 h-20 mx-auto mb-3 object-contain">
+      <h1 class="text-3xl font-bold text-[#003087]">UNSTA CUC</h1>
+      <p class="text-gray-600">Sorteo Educativo</p>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto">
+    <!-- TAB REGISTRO -->
+    <div id="tab-0" class="tab-content p-4 md:p-6">
+      <div class="max-w-md mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div class="bg-[#003087] text-white p-8 text-center">
+          <h2 class="text-3xl font-bold mb-2">¡Participa del Sorteo!</h2>
+          <p class="opacity-90">Completa tus datos</p>
+        </div>
+       
+        <form id="form-registro" class="p-6 md:p-8 space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo <span class="text-red-500">*</span></label>
+            <input type="text" id="nombreCompleto" required class="w-full px-5 py-4 text-base border border-gray-300 rounded-2xl focus:outline-none focus:border-[#0052CC]" placeholder="Ej: Juan Pérez García">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">DNI <span class="text-red-500">*</span></label>
+            <input type="text" id="dni" required maxlength="10" class="w-full px-5 py-4 text-base border border-gray-300 rounded-2xl focus:outline-none focus:border-[#0052CC]">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Celular <span class="text-red-500">*</span></label>
+              <input type="tel" id="celular" required class="w-full px-5 py-4 text-base border border-gray-300 rounded-2xl focus:outline-none focus:border-[#0052CC]">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input type="email" id="email" class="w-full px-5 py-4 text-base border border-gray-300 rounded-2xl focus:outline-none focus:border-[#0052CC]">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">¿Qué te gustaría estudiar?</label>
+            <input type="text" id="carrera" placeholder="Ej: Ingeniería en Software..." class="w-full px-5 py-4 text-base border border-gray-300 rounded-2xl focus:outline-none focus:border-[#0052CC]">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-3">¿Te gustaría recibir el Servicio de Orientación Vocacional?</label>
+            <div class="flex gap-8">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="orientacion" value="Sí" class="w-5 h-5 accent-[#0052CC]">
+                <span class="text-lg">Sí</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="orientacion" value="No" class="w-5 h-5 accent-[#0052CC]">
+                <span class="text-lg">No</span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="w-full bg-[#003087] hover:bg-[#002266] py-4 rounded-2xl text-white font-semibold text-lg active:scale-95 transition-all">
+            Participar en el Sorteo
+          </button>
+        </form>
+      </div>
+
+      <div class="mt-10 text-center">
+        <p class="text-gray-600 mb-4 text-sm">Comparte este QR</p>
+        <div id="qrcode" class="mx-auto bg-white p-4 inline-block rounded-2xl shadow"></div>
+      </div>
+    </div>
+
+    <!-- TAB ADMINISTRAR -->
+    <div id="tab-1" class="tab-content hidden p-4 md:p-6 space-y-8">
+      <div>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-[#003087]">Ronda Actual</h2>
+          <button onclick="sortear()" class="bg-[#C9A227] hover:bg-[#D4AF37] text-white px-6 py-3 rounded-2xl font-semibold flex items-center gap-2">
+            🎉 Realizar Sorteo
+          </button>
+        </div>
+        <p id="count" class="text-gray-500 mb-4">0 participantes</p>
+        <!-- Aquí va el resto de tu contenido anterior (ganador, tabla, historial) -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="suerte-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+    <div class="modal bg-white rounded-3xl shadow-2xl max-w-sm w-full mx-4 overflow-hidden">
+      <div class="bg-[#003087] p-10 text-center">
+        <div class="text-8xl mb-4">🍀</div>
+        <h2 class="text-5xl font-bold text-white">¡SUERTE!</h2>
+        <p class="text-white/90 mt-3">¡Gracias por participar!</p>
+      </div>
+      <div class="p-6">
+        <button onclick="cerrarModal()" class="w-full bg-[#003087] hover:bg-[#002266] text-white py-4 rounded-2xl font-semibold">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-6 text-gray-500 text-sm">
+    Universidad del Norte Santo Tomás de Aquino - UNSTA
+  </footer>
+
+  <script>
+    // Pega aquí todo tu script JavaScript anterior (cargarDatos, sortear, etc.)
+    let participantes = []
+    let historial = []
+
+    // ... (tu código completo del script) ...
+
+    window.onload = function() {
+      cargarDatos()
+      generarQR()
+      showTab(0)
+    }
+  </script>
+</body>
+</html>
