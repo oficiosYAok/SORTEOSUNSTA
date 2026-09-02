@@ -1048,6 +1048,14 @@
 
       <div class="card" id="resultado-sorteo" style="display:none;">
         <h2>🏆 Resultados de esta sesión</h2>
+
+        <div id="resumen-sesion" style="display:none; margin-bottom:1.25rem; padding:1rem; background:#f8fafc; border:1px solid var(--border); border-radius:10px;">
+          <p style="margin-bottom:0.75rem; font-size:0.9rem; color:var(--muted);">
+            Hiciste <strong id="resumen-cantidad-sorteos">0</strong> sorteos en esta sesión, con <strong id="resumen-cantidad-ganadores">0</strong> ganadores en total.
+          </p>
+          <button class="btn btn-primary btn-sm" id="btn-guardar-combinado">💾 Guardar todos como un solo sorteo en el historial</button>
+        </div>
+
         <div id="ganadores-container"></div>
         <div class="actions">
           <button class="btn btn-accent" id="btn-sortear-de-nuevo">🎲 Sortear de nuevo (mismo grupo)</button>
@@ -1432,7 +1440,7 @@
       const lines = clean.split(/\r?\n/);
       if (lines.length < 2) return [];
       const headers = splitCsvLine(lines[0]).map(normalizeHeader);
-      const map = {
+      const exactMap = {
         apellidonombre: 'apellidoNombre',
         apellidoynombre: 'apellidoNombre',
         nombre: 'apellidoNombre',
@@ -1451,7 +1459,23 @@
         colegio: 'escuela',
         institucion: 'escuela'
       };
-      const keys = headers.map(h => map[h] || h);
+      // Si no hay coincidencia exacta, probamos si el encabezado CONTIENE alguna
+      // de estas palabras clave (ej: "Escuela a la que pertenece" -> escuela).
+      const fuzzyRules = [
+        { test: h => h.includes('escuela') || h.includes('colegio') || h.includes('instituc'), key: 'escuela' },
+        { test: h => h.includes('dni') || h.includes('documento'), key: 'dni' },
+        { test: h => h.includes('nombre') || h.includes('apellido'), key: 'apellidoNombre' },
+        { test: h => h.includes('mail') || h.includes('correo'), key: 'mail' },
+        { test: h => h.includes('celular') || h.includes('telefono') || h.includes('whatsapp'), key: 'celular' },
+        { test: h => h.includes('legajo') || h.includes('codigo'), key: 'legajo' },
+        { test: h => h.includes('carrera'), key: 'carrera' }
+      ];
+      function resolveKey(h) {
+        if (exactMap[h]) return exactMap[h];
+        const rule = fuzzyRules.find(r => r.test(h));
+        return rule ? rule.key : h;
+      }
+      const keys = headers.map(resolveKey);
       const result = [];
       for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
@@ -1621,10 +1645,18 @@
       const sheetsCard = document.getElementById('btn-origen-sheets');
       const sheetsSub = document.getElementById('choice-sub-sheets');
       const cfgBtn = document.getElementById('btn-config-sheets');
+
       if (sheetsCfg) {
         sheetsSub.textContent = 'Conectada · tocá para sortear';
         sheetsCard.classList.add('configured');
         cfgBtn.style.display = 'inline-flex';
+
+        // Ya hay una hoja conectada: cargamos directo desde ahí y nos salteamos
+        // la pantalla de elección. Si falla, mostramos la elección igual para
+        // que se pueda reintentar o usar otro origen.
+        toast('Cargando participantes desde Google Sheets...');
+        const ok = await loadFromSheets(sheetsCfg);
+        if (ok) return;
       } else {
         sheetsSub.textContent = 'Tocá para conectar';
         sheetsCard.classList.remove('configured');
@@ -1743,7 +1775,7 @@
             </p>
           `, `<button class="btn btn-outline" id="modal-cancel">Cerrar</button>`);
           document.getElementById('modal-cancel').onclick = closeModal;
-          return;
+          return false;
         }
 
         const normalizados = normalizarListaSheets(rawRows);
@@ -1753,12 +1785,12 @@
             <p>Se leyó la hoja, pero ninguna fila tiene al menos <strong>nombre</strong> o <strong>dni</strong> cargado en una columna reconocible.</p>
             <p style="margin-top:0.75rem;"><strong>Encabezados detectados en tu hoja:</strong><br>${escapeHtml(headersDetectados)}</p>
             <p style="margin-top:0.75rem; color:var(--muted); font-size:0.85rem;">
-              La app reconoce columnas llamadas: nombre / apellidoNombre / nombreYApellido, dni, y escuela / colegio / institución.
-              Renombrá el encabezado de tu hoja para que coincida con alguno de estos.
+              La app reconoce columnas que contengan las palabras: nombre/apellido, dni, y escuela/colegio/institución.
+              Renombrá el encabezado de tu hoja para que incluya alguna de esas palabras.
             </p>
           `, `<button class="btn btn-outline" id="modal-cancel">Cerrar</button>`);
           document.getElementById('modal-cancel').onclick = closeModal;
-          return;
+          return false;
         }
 
         sorteoOrigen = 'sheets';
@@ -1766,9 +1798,20 @@
         document.getElementById('sorteo-origen-label').textContent = 'la hoja de Google Sheets conectada';
         updateSorteoConfigCount();
         showSorteoStep('config');
-        toast(`Cargados ${normalizados.length} participantes desde Sheets`, 'success');
+
+        const conEscuela = normalizados.filter(p => p.escuela).length;
+        if (conEscuela === 0) {
+          const headersDetectados = Object.keys(rawRows[0]).join(', ') || '(ninguno)';
+          toast(`Cargados ${normalizados.length} participantes, pero ninguno tiene "escuela". Encabezados detectados: ${headersDetectados}`, 'error');
+        } else if (conEscuela < normalizados.length) {
+          toast(`Cargados ${normalizados.length} participantes (${conEscuela} con escuela cargada)`, 'success');
+        } else {
+          toast(`Cargados ${normalizados.length} participantes desde Sheets`, 'success');
+        }
+        return true;
       } catch (err) {
         toast('No se pudo cargar la hoja: ' + err.message, 'error');
+        return false;
       }
     }
 
@@ -1967,14 +2010,26 @@
     function renderSorteosSesion() {
       const wrap = document.getElementById('resultado-sorteo');
       const cont = document.getElementById('ganadores-container');
+      const resumen = document.getElementById('resumen-sesion');
 
       if (!sorteosSesion.length) {
         wrap.style.display = 'none';
         cont.innerHTML = '';
+        resumen.style.display = 'none';
         return;
       }
 
       wrap.style.display = 'block';
+
+      const totalGanadores = sorteosSesion.reduce((acc, s) => acc + s.ganadores.length, 0);
+      if (sorteosSesion.length > 1) {
+        document.getElementById('resumen-cantidad-sorteos').textContent = sorteosSesion.length;
+        document.getElementById('resumen-cantidad-ganadores').textContent = totalGanadores;
+        resumen.style.display = 'block';
+      } else {
+        resumen.style.display = 'none';
+      }
+
       cont.innerHTML = sorteosSesion.map((sorteo, idx) => `
         <div class="sorteo-resultado-bloque">
           <div class="sorteo-resultado-header">
@@ -2009,6 +2064,59 @@
       renderSorteosSesion();
       toast('Sorteo guardado en el historial', 'success');
     }
+
+    // Junta TODOS los sorteos hechos en esta sesión (todos sus ganadores y la
+    // unión de participantes) en un único registro del historial.
+    document.getElementById('btn-guardar-combinado').addEventListener('click', () => {
+      if (!sorteosSesion.length) return;
+      const totalGanadores = sorteosSesion.reduce((acc, s) => acc + s.ganadores.length, 0);
+
+      openModal('Guardar todos como un solo sorteo', `
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">
+          Se va a crear un único registro en el historial con los <strong>${totalGanadores}</strong> ganadores
+          de los <strong>${sorteosSesion.length}</strong> sorteos de esta sesión, junto con la lista completa de participantes usada.
+        </p>
+        <div class="form-group">
+          <label>Nombre para este sorteo combinado</label>
+          <input type="text" id="combinado-nombre" value="Sorteo ${formatDate(new Date().toISOString())}" />
+        </div>
+      `, `
+        <button class="btn btn-outline" id="modal-cancel">Cancelar</button>
+        <button class="btn btn-primary" id="modal-ok">Guardar</button>
+      `);
+
+      document.getElementById('modal-ok').onclick = async () => {
+        const nombre = document.getElementById('combinado-nombre').value.trim() || `Sorteo combinado ${formatDate(new Date().toISOString())}`;
+
+        const ganadoresCombinados = [];
+        sorteosSesion.forEach(s => ganadoresCombinados.push(...s.ganadores));
+
+        const participantesMap = new Map();
+        sorteosSesion.forEach(s => s.participantesSnapshot.forEach(p => participantesMap.set(p.id, p)));
+        const participantesCombinados = Array.from(participantesMap.values());
+
+        const combinado = {
+          id: uid(),
+          nombre,
+          fecha: new Date().toISOString(),
+          ganadores: ganadoresCombinados,
+          participantesSnapshot: participantesCombinados,
+          cantidadGanadores: ganadoresCombinados.length,
+          origen: sorteoOrigen
+        };
+
+        await fetchHistorial();
+        state.historial.unshift(combinado);
+        await saveHistorial();
+
+        sorteosSesion.forEach(s => { s.guardado = true; });
+        renderSorteosSesion();
+
+        closeModal();
+        toast('Sorteo combinado guardado en el historial', 'success');
+      };
+      document.getElementById('modal-cancel').onclick = closeModal;
+    });
 
     // Vuelve a sortear con el mismo grupo de participantes (formulario, archivo
     // o Sheets ya cargado), sin borrar los sorteos anteriores de esta sesión ni
