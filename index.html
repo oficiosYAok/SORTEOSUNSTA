@@ -673,8 +673,22 @@
  
     .choice-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 1rem;
+    }
+ 
+    .choice-card.configured {
+      border-color: var(--success);
+    }
+    .choice-card .choice-badge {
+      display: inline-block;
+      margin-top: 0.15rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #c6f6d5;
+      color: #276749;
     }
  
     .choice-card {
@@ -958,11 +972,19 @@
             </button>
             <button class="choice-card" id="btn-origen-archivo" type="button">
               <span class="choice-icon">📂</span>
-              <span class="choice-title">Base de datos existente</span>
-              <span class="choice-sub">Importar CSV o JSON</span>
+              <span class="choice-title">Archivo (CSV/JSON)</span>
+              <span class="choice-sub">Importar puntualmente</span>
+            </button>
+            <button class="choice-card" id="btn-origen-sheets" type="button">
+              <span class="choice-icon">📊</span>
+              <span class="choice-title">Google Sheets</span>
+              <span class="choice-sub" id="choice-sub-sheets">Tocá para conectar</span>
             </button>
           </div>
-          <div class="actions" style="justify-content:center; margin-top:1.5rem;">
+          <div class="actions" style="justify-content:center; margin-top:1rem;">
+            <button class="btn btn-outline btn-sm" id="btn-config-sheets" type="button" style="display:none;">⚙️ Cambiar hoja de Sheets conectada</button>
+          </div>
+          <div class="actions" style="justify-content:center; margin-top:0.5rem;">
             <button class="btn btn-outline btn-sm" id="btn-volver-inicio-1">‹ Volver</button>
           </div>
         </div>
@@ -1515,6 +1537,21 @@
     document.getElementById('btn-iniciar-sorteo').addEventListener('click', async () => {
       await fetchParticipantes();
       document.getElementById('choice-count-formulario').textContent = state.participantes.length + ' participante' + (state.participantes.length === 1 ? '' : 's');
+ 
+      const sheetsCfg = await fetchSheetsConfig();
+      const sheetsCard = document.getElementById('btn-origen-sheets');
+      const sheetsSub = document.getElementById('choice-sub-sheets');
+      const cfgBtn = document.getElementById('btn-config-sheets');
+      if (sheetsCfg) {
+        sheetsSub.textContent = 'Conectada · tocá para sortear';
+        sheetsCard.classList.add('configured');
+        cfgBtn.style.display = 'inline-flex';
+      } else {
+        sheetsSub.textContent = 'Tocá para conectar';
+        sheetsCard.classList.remove('configured');
+        cfgBtn.style.display = 'none';
+      }
+ 
       showSorteoStep('eleccion');
     });
  
@@ -1537,6 +1574,111 @@
     document.getElementById('btn-origen-archivo').addEventListener('click', () => {
       sorteoOrigen = 'archivo';
       showSorteoStep('archivo');
+    });
+ 
+    // ========== GOOGLE SHEETS (origen en vivo, sin re-importar) ==========
+    const KEY_SHEETS_CONFIG = 'sheets_config';
+ 
+    function parseSheetsUrl(url) {
+      const idMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      if (!idMatch) return null;
+      const gidMatch = url.match(/[?&#]gid=([0-9]+)/);
+      return { id: idMatch[1], gid: gidMatch ? gidMatch[1] : '0' };
+    }
+ 
+    function buildGvizCsvUrl(id, gid) {
+      return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}`;
+    }
+ 
+    async function fetchSheetsConfig() {
+      try {
+        const res = await window.storage.get(KEY_SHEETS_CONFIG, true);
+        return res && res.value ? JSON.parse(res.value) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+ 
+    async function saveSheetsConfig(cfg) {
+      try {
+        await window.storage.set(KEY_SHEETS_CONFIG, JSON.stringify(cfg), true);
+      } catch (e) {
+        toast('No se pudo guardar la configuración de Sheets', 'error');
+      }
+    }
+ 
+    async function loadSheetsCsvRows(cfg) {
+      const csvUrl = buildGvizCsvUrl(cfg.id, cfg.gid);
+      const resp = await fetch(csvUrl);
+      if (!resp.ok) {
+        throw new Error('No se pudo acceder a la hoja. Revisá que esté compartida como "Cualquiera con el enlace puede ver".');
+      }
+      const text = await resp.text();
+      return parseCSV(text);
+    }
+ 
+    function promptSheetsConfig(existingCfg) {
+      openModal('Conectar Google Sheets', `
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">
+          Pegá el link para compartir de tu hoja de Google Sheets. Tiene que estar compartida como
+          <strong>"Cualquiera con el enlace puede ver"</strong>. La primera fila debe tener las columnas:
+          apellidoNombre, dni, celular, mail, carrera, legajo.
+        </p>
+        <div class="form-group">
+          <label>Link de Google Sheets</label>
+          <input type="text" id="sheets-url-input" placeholder="https://docs.google.com/spreadsheets/d/..." value="${existingCfg ? escapeHtml(existingCfg.url) : ''}" />
+        </div>
+      `, `
+        <button class="btn btn-outline" id="modal-cancel">Cancelar</button>
+        <button class="btn btn-primary" id="modal-ok">Guardar y usar</button>
+      `);
+      document.getElementById('modal-ok').onclick = async () => {
+        const url = document.getElementById('sheets-url-input').value.trim();
+        const parsed = parseSheetsUrl(url);
+        if (!parsed) {
+          toast('El link no parece un link válido de Google Sheets', 'error');
+          return;
+        }
+        const cfg = { url, id: parsed.id, gid: parsed.gid };
+        await saveSheetsConfig(cfg);
+        closeModal();
+        await loadFromSheets(cfg);
+      };
+      document.getElementById('modal-cancel').onclick = closeModal;
+    }
+ 
+    async function loadFromSheets(cfg) {
+      try {
+        const rawRows = await loadSheetsCsvRows(cfg);
+        const normalizados = normalizarLista(rawRows);
+        if (!normalizados.length) {
+          toast('La hoja no tiene participantes válidos (revisá los encabezados de columna)', 'error');
+          return;
+        }
+        sorteoOrigen = 'sheets';
+        sorteoPool = normalizados;
+        document.getElementById('sorteo-origen-label').textContent = 'la hoja de Google Sheets conectada';
+        updateSorteoConfigCount();
+        showSorteoStep('config');
+        toast(`Cargados ${normalizados.length} participantes desde Sheets`, 'success');
+      } catch (err) {
+        toast('No se pudo cargar la hoja: ' + err.message, 'error');
+      }
+    }
+ 
+    document.getElementById('btn-origen-sheets').addEventListener('click', async () => {
+      const cfg = await fetchSheetsConfig();
+      if (!cfg) {
+        promptSheetsConfig();
+        return;
+      }
+      toast('Cargando datos de Google Sheets...');
+      await loadFromSheets(cfg);
+    });
+ 
+    document.getElementById('btn-config-sheets').addEventListener('click', async () => {
+      const cfg = await fetchSheetsConfig();
+      promptSheetsConfig(cfg);
     });
  
     const fileDropSorteo = document.getElementById('file-drop-sorteo');
@@ -1905,4 +2047,3 @@
   </script>
 </body>
 </html>
- 
