@@ -1369,14 +1369,49 @@
       reader.readAsText(file, 'UTF-8');
     }
 
+    // Divide una línea de CSV respetando comas dentro de comillas (ej: "Escuela, N°5")
+    function splitCsvLine(line) {
+      const result = [];
+      let cur = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (inQuotes) {
+          if (ch === '"') {
+            if (line[i + 1] === '"') { cur += '"'; i++; }
+            else { inQuotes = false; }
+          } else {
+            cur += ch;
+          }
+        } else {
+          if (ch === '"') { inQuotes = true; }
+          else if (ch === ',') { result.push(cur); cur = ''; }
+          else { cur += ch; }
+        }
+      }
+      result.push(cur);
+      return result.map(s => s.trim());
+    }
+
+    function normalizeHeader(h) {
+      return h
+        .replace(/^\uFEFF/, '')          // BOM que a veces agrega Google al exportar
+        .trim()
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // sin acentos: institución -> institucion
+        .replace(/\s+/g, '');
+    }
+
     function parseCSV(text) {
-      const lines = text.trim().split(/\r?\n/);
+      const clean = text.replace(/^\uFEFF/, '').trim();
+      const lines = clean.split(/\r?\n/);
       if (lines.length < 2) return [];
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, ''));
+      const headers = splitCsvLine(lines[0]).map(normalizeHeader);
       const map = {
         apellidonombre: 'apellidoNombre',
-        'apellidoynombre': 'apellidoNombre',
+        apellidoynombre: 'apellidoNombre',
         nombre: 'apellidoNombre',
+        nombreyapellido: 'apellidoNombre',
         dni: 'dni',
         celular: 'celular',
         telefono: 'celular',
@@ -1386,15 +1421,19 @@
         carrera: 'carrera',
         legajo: 'legajo',
         codigodelegajo: 'legajo',
-        codigo: 'legajo'
+        codigo: 'legajo',
+        escuela: 'escuela',
+        colegio: 'escuela',
+        institucion: 'escuela'
       };
       const keys = headers.map(h => map[h] || h);
       const result = [];
       for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-        if (cols.length < 2) continue;
+        if (!lines[i].trim()) continue;
+        const cols = splitCsvLine(lines[i]);
+        if (cols.length < 1) continue;
         const obj = {};
-        keys.forEach((k, idx) => { if (k) obj[k] = cols[idx] || ''; });
+        keys.forEach((k, idx) => { if (k) obj[k] = (cols[idx] || '').trim(); });
         if (obj.apellidoNombre || obj.dni) result.push(obj);
       }
       return result;
@@ -1626,9 +1665,13 @@
       const csvUrl = buildGvizCsvUrl(cfg.id, cfg.gid);
       const resp = await fetch(csvUrl);
       if (!resp.ok) {
-        throw new Error('No se pudo acceder a la hoja. Revisá que esté compartida como "Cualquiera con el enlace puede ver".');
+        throw new Error('No se pudo acceder a la hoja (código ' + resp.status + '). Revisá que esté compartida como "Cualquiera con el enlace puede ver".');
       }
-      const text = await resp.text();
+      let text = await resp.text();
+      text = text.replace(/^\uFEFF/, '');
+      if (/^\s*<(!doctype|html)/i.test(text)) {
+        throw new Error('La hoja no parece pública todavía. Cambiá el acceso general a "Cualquiera con el enlace puede ver" e intentá de nuevo.');
+      }
       return parseCSV(text);
     }
 
@@ -1665,11 +1708,34 @@
     async function loadFromSheets(cfg) {
       try {
         const rawRows = await loadSheetsCsvRows(cfg);
-        const normalizados = normalizarListaSheets(rawRows);
-        if (!normalizados.length) {
-          toast('La hoja no tiene participantes válidos (revisá los encabezados de columna)', 'error');
+
+        if (!rawRows.length) {
+          openModal('La hoja no tiene datos', `
+            <p>Se pudo conectar con la hoja, pero no encontré ninguna fila de datos debajo del encabezado.</p>
+            <p style="margin-top:0.75rem; color:var(--muted); font-size:0.85rem;">
+              Revisá que la primera fila tenga los títulos de columna (por ejemplo <strong>nombre, dni, escuela</strong>)
+              y que haya al menos una fila cargada debajo.
+            </p>
+          `, `<button class="btn btn-outline" id="modal-cancel">Cerrar</button>`);
+          document.getElementById('modal-cancel').onclick = closeModal;
           return;
         }
+
+        const normalizados = normalizarListaSheets(rawRows);
+        if (!normalizados.length) {
+          const headersDetectados = Object.keys(rawRows[0]).join(', ') || '(ninguno)';
+          openModal('No se encontraron participantes válidos', `
+            <p>Se leyó la hoja, pero ninguna fila tiene al menos <strong>nombre</strong> o <strong>dni</strong> cargado en una columna reconocible.</p>
+            <p style="margin-top:0.75rem;"><strong>Encabezados detectados en tu hoja:</strong><br>${escapeHtml(headersDetectados)}</p>
+            <p style="margin-top:0.75rem; color:var(--muted); font-size:0.85rem;">
+              La app reconoce columnas llamadas: nombre / apellidoNombre / nombreYApellido, dni, y escuela / colegio / institución.
+              Renombrá el encabezado de tu hoja para que coincida con alguno de estos.
+            </p>
+          `, `<button class="btn btn-outline" id="modal-cancel">Cerrar</button>`);
+          document.getElementById('modal-cancel').onclick = closeModal;
+          return;
+        }
+
         sorteoOrigen = 'sheets';
         sorteoPool = normalizados;
         document.getElementById('sorteo-origen-label').textContent = 'la hoja de Google Sheets conectada';
