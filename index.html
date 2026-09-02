@@ -408,10 +408,30 @@
       color: #92400e;
     }
 
+    .winner-box .school {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #b45309;
+      margin-top: 0.2rem;
+    }
+
     .winner-box .details {
       font-size: 0.9rem;
       color: #78350f;
       margin-top: 0.35rem;
+    }
+
+    .sorteo-resultado-bloque { margin-bottom: 0.5rem; }
+
+    .sorteo-resultado-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.05rem;
+      color: var(--primary);
     }
 
     .history-item {
@@ -1027,11 +1047,11 @@
       </div>
 
       <div class="card" id="resultado-sorteo" style="display:none;">
-        <h2>🏆 Resultado del sorteo</h2>
+        <h2>🏆 Resultados de esta sesión</h2>
         <div id="ganadores-container"></div>
         <div class="actions">
-          <button class="btn btn-success" id="btn-guardar-sorteo">💾 Guardar en historial</button>
-          <button class="btn btn-outline" id="btn-nuevo-sorteo">Nuevo sorteo</button>
+          <button class="btn btn-accent" id="btn-sortear-de-nuevo">🎲 Sortear de nuevo (mismo grupo)</button>
+          <button class="btn btn-outline" id="btn-nuevo-sorteo">🔄 Empezar de cero (otro origen)</button>
         </div>
       </div>
     </section>
@@ -1093,14 +1113,18 @@
 
     let state = {
       participantes: [],
-      historial: [],
-      ultimoSorteo: null // { nombre, ganadores, participantesSnapshot, fecha }
+      historial: []
     };
 
     // Pool temporal usado durante el flujo de sorteo (puede venir del formulario
-    // o de un archivo importado solo para ese sorteo)
+    // o de un archivo/Sheets importado para ese sorteo)
     let sorteoPool = [];
-    let sorteoOrigen = null; // 'formulario' | 'archivo'
+    let sorteoOrigen = null; // 'formulario' | 'archivo' | 'sheets'
+
+    // Sorteos realizados en esta sesión, que se van acumulando en pantalla
+    // hasta que se guardan (o se descartan) explícitamente. Sortear de nuevo
+    // no borra los anteriores.
+    let sorteosSesion = [];
 
     async function fetchParticipantes() {
       try {
@@ -1272,6 +1296,7 @@
       if (view === 'sorteo') {
         sorteoPool = [];
         sorteoOrigen = null;
+        sorteosSesion = [];
         document.getElementById('resultado-sorteo').style.display = 'none';
         document.getElementById('sorteo-nombre').value = '';
         showSorteoStep('inicio');
@@ -1835,20 +1860,23 @@
       const ganadores = pool.slice(0, n);
       const nombre = document.getElementById('sorteo-nombre').value.trim() || `Sorteo ${formatDate(new Date().toISOString())}`;
 
-      state.ultimoSorteo = {
+      const nuevoSorteo = {
         id: uid(),
         nombre,
         fecha: new Date().toISOString(),
         ganadores,
         participantesSnapshot: [...sorteoPool],
         cantidadGanadores: n,
-        origen: sorteoOrigen
+        origen: sorteoOrigen,
+        guardado: false
       };
 
       animarSorteo(sorteoPool, ganadores, () => {
-        mostrarResultado(state.ultimoSorteo);
+        sorteosSesion.unshift(nuevoSorteo);
+        renderSorteosSesion();
       });
     });
+
 
     function animarSorteo(participantes, ganadores, onDone) {
       const overlay = document.getElementById('spin-overlay');
@@ -1914,43 +1942,85 @@
     // Arma la línea de detalle de un participante mostrando solo los campos
     // que ese registro realmente tiene (varía según el origen: formulario,
     // archivo o Google Sheets con solo nombre/dni/escuela).
+    // La escuela se muestra aparte, como subtítulo destacado, así que no se repite acá.
     function participantDetailsHtml(p) {
       const parts = [`DNI: ${escapeHtml(p.dni)}`];
       if (p.legajo) parts.push(`Legajo: ${escapeHtml(p.legajo)}`);
-      if (p.escuela) parts.push(`Escuela: ${escapeHtml(p.escuela)}`);
       if (p.carrera) parts.push(escapeHtml(p.carrera));
       if (p.mail) parts.push(escapeHtml(p.mail));
       return parts.join(' · ');
     }
 
-    function mostrarResultado(sorteo) {
-      const cont = document.getElementById('ganadores-container');
-      cont.innerHTML = sorteo.ganadores.map((g, i) => `
+    function winnerBoxHtml(g, i) {
+      return `
         <div class="winner-box">
           <div class="trophy">${i === 0 ? '🏆' : '🎖'}</div>
           <div class="name">${escapeHtml(g.apellidoNombre)}</div>
+          ${g.escuela ? `<div class="school">🏫 ${escapeHtml(g.escuela)}</div>` : ''}
           <div class="details">${participantDetailsHtml(g)}</div>
         </div>
-      `).join('');
-      document.getElementById('resultado-sorteo').style.display = 'block';
-      document.getElementById('resultado-sorteo').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      `;
     }
 
-    document.getElementById('btn-guardar-sorteo').addEventListener('click', async () => {
-      if (!state.ultimoSorteo) return;
-      await fetchHistorial();
-      if (state.historial.some(h => h.id === state.ultimoSorteo.id)) {
-        toast('Este sorteo ya está en el historial');
+    // Dibuja TODOS los sorteos hechos en esta sesión (el más reciente primero),
+    // cada uno con su propio botón de guardar, sin pisar los anteriores.
+    function renderSorteosSesion() {
+      const wrap = document.getElementById('resultado-sorteo');
+      const cont = document.getElementById('ganadores-container');
+
+      if (!sorteosSesion.length) {
+        wrap.style.display = 'none';
+        cont.innerHTML = '';
         return;
       }
-      state.historial.unshift({ ...state.ultimoSorteo });
-      await saveHistorial();
+
+      wrap.style.display = 'block';
+      cont.innerHTML = sorteosSesion.map((sorteo, idx) => `
+        <div class="sorteo-resultado-bloque">
+          <div class="sorteo-resultado-header">
+            <strong>${escapeHtml(sorteo.nombre)}</strong>
+            <span class="badge ${sorteo.guardado ? 'badge-success' : 'badge-warn'}">${sorteo.guardado ? '✔ Guardado' : 'Sin guardar'}</span>
+          </div>
+          ${sorteo.ganadores.map((g, i) => winnerBoxHtml(g, i)).join('')}
+          <div class="actions">
+            <button class="btn btn-success btn-sm btn-guardar-uno" data-idx="${idx}" ${sorteo.guardado ? 'disabled' : ''}>
+              ${sorteo.guardado ? '✔ Guardado en el historial' : '💾 Guardar este sorteo'}
+            </button>
+          </div>
+        </div>
+      `).join('<hr style="margin:1.5rem 0; border:none; border-top:1px dashed var(--border);">');
+
+      cont.querySelectorAll('.btn-guardar-uno').forEach(btn => {
+        btn.addEventListener('click', () => guardarSorteoSesion(+btn.dataset.idx));
+      });
+
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function guardarSorteoSesion(idx) {
+      const sorteo = sorteosSesion[idx];
+      if (!sorteo || sorteo.guardado) return;
+      await fetchHistorial();
+      if (!state.historial.some(h => h.id === sorteo.id)) {
+        state.historial.unshift({ ...sorteo });
+        await saveHistorial();
+      }
+      sorteo.guardado = true;
+      renderSorteosSesion();
       toast('Sorteo guardado en el historial', 'success');
+    }
+
+    // Vuelve a sortear con el mismo grupo de participantes (formulario, archivo
+    // o Sheets ya cargado), sin borrar los sorteos anteriores de esta sesión ni
+    // pedir de nuevo el link de Sheets.
+    document.getElementById('btn-sortear-de-nuevo').addEventListener('click', () => {
+      showSorteoStep('config');
+      document.getElementById('sorteo-step-config').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     document.getElementById('btn-nuevo-sorteo').addEventListener('click', () => {
+      sorteosSesion = [];
       document.getElementById('resultado-sorteo').style.display = 'none';
-      state.ultimoSorteo = null;
       document.getElementById('sorteo-nombre').value = '';
       sorteoPool = [];
       sorteoOrigen = null;
