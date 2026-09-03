@@ -1135,9 +1135,34 @@
     // no borra los anteriores.
     let sorteosSesion = [];
  
+    // window.storage a veces todavía no está listo apenas carga la página.
+    // Estos wrappers esperan un poco y reintentan antes de fallar, en vez de
+    // romper con un error críptico de "undefined".
+    async function esperarStorage(maxEsperaMs = 4000) {
+      const inicio = Date.now();
+      while (typeof window.storage === 'undefined' && Date.now() - inicio < maxEsperaMs) {
+        await new Promise(r => setTimeout(r, 150));
+      }
+      return typeof window.storage !== 'undefined';
+    }
+ 
+    async function storageGet(key, shared) {
+      if (typeof window.storage === 'undefined' && !(await esperarStorage())) {
+        throw new Error('el almacenamiento no está disponible todavía, probá de nuevo en unos segundos');
+      }
+      return window.storage.get(key, shared);
+    }
+ 
+    async function storageSet(key, value, shared) {
+      if (typeof window.storage === 'undefined' && !(await esperarStorage())) {
+        throw new Error('el almacenamiento no está disponible todavía, probá de nuevo en unos segundos');
+      }
+      return window.storage.set(key, value, shared);
+    }
+ 
     async function fetchParticipantes() {
       try {
-        const res = await window.storage.get(KEY_PARTICIPANTES, true);
+        const res = await storageGet(KEY_PARTICIPANTES, true);
         state.participantes = res && res.value ? JSON.parse(res.value) : [];
       } catch (e) {
         state.participantes = state.participantes || [];
@@ -1152,7 +1177,7 @@
  
     async function fetchHistorial() {
       try {
-        const res = await window.storage.get(KEY_HISTORIAL, true);
+        const res = await storageGet(KEY_HISTORIAL, true);
         state.historial = res && res.value ? JSON.parse(res.value) : [];
         historialSyncOk = true;
       } catch (e) {
@@ -1167,7 +1192,7 @@
  
     async function saveParticipantes() {
       try {
-        const result = await window.storage.set(KEY_PARTICIPANTES, JSON.stringify(state.participantes), true);
+        const result = await storageSet(KEY_PARTICIPANTES, JSON.stringify(state.participantes), true);
         if (!result) toast('No se pudo sincronizar la lista de participantes', 'error');
       } catch (e) {
         toast('Error al sincronizar participantes', 'error');
@@ -1176,7 +1201,7 @@
  
     async function saveHistorial() {
       try {
-        const result = await window.storage.set(KEY_HISTORIAL, JSON.stringify(state.historial), true);
+        const result = await storageSet(KEY_HISTORIAL, JSON.stringify(state.historial), true);
         if (!result) toast('No se pudo sincronizar el historial', 'error');
       } catch (e) {
         toast('Error al sincronizar el historial', 'error');
@@ -1221,7 +1246,7 @@
     // ========== MODO ADMIN ==========
     async function checkAdminSession() {
       try {
-        const res = await window.storage.get('admin_session', false);
+        const res = await storageGet('admin_session', false);
         isAdmin = !!(res && res.value === 'true');
       } catch (e) {
         isAdmin = false;
@@ -1257,7 +1282,7 @@
       const tryLogin = async () => {
         if (input.value === ADMIN_PASSWORD) {
           isAdmin = true;
-          try { await window.storage.set('admin_session', 'true', false); } catch (e) {}
+          try { await storageSet('admin_session', 'true', false); } catch (e) {}
           updateAdminUI();
           closeModal();
           toast('Modo admin activado', 'success');
@@ -1276,7 +1301,7 @@
       if (isAdmin) {
         if (confirm('¿Salir del modo admin?')) {
           isAdmin = false;
-          try { await window.storage.set('admin_session', 'false', false); } catch (e) {}
+          try { await storageSet('admin_session', 'false', false); } catch (e) {}
           updateAdminUI();
           const activeView = document.querySelector('.view.active');
           if (activeView && ADMIN_VIEWS.includes(activeView.id.replace('view-', ''))) {
@@ -1739,7 +1764,7 @@
  
     async function fetchSheetsConfig() {
       try {
-        const res = await window.storage.get(KEY_SHEETS_CONFIG, true);
+        const res = await storageGet(KEY_SHEETS_CONFIG, true);
         return res && res.value ? JSON.parse(res.value) : null;
       } catch (e) {
         return null;
@@ -1748,7 +1773,7 @@
  
     async function saveSheetsConfig(cfg) {
       try {
-        const result = await window.storage.set(KEY_SHEETS_CONFIG, JSON.stringify(cfg), true);
+        const result = await storageSet(KEY_SHEETS_CONFIG, JSON.stringify(cfg), true);
         if (!result) {
           toast('No se pudo guardar la conexión con Sheets (la app no confirmó el guardado)', 'error');
           return false;
