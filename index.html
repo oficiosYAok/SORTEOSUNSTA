@@ -1138,24 +1138,33 @@
     // window.storage a veces todavía no está listo apenas carga la página.
     // Estos wrappers esperan un poco y reintentan antes de fallar, en vez de
     // romper con un error críptico de "undefined".
-    async function esperarStorage(maxEsperaMs = 4000) {
-      const inicio = Date.now();
-      while (typeof window.storage === 'undefined' && Date.now() - inicio < maxEsperaMs) {
-        await new Promise(r => setTimeout(r, 150));
+    // window.storage a veces todavía no está listo apenas carga la página.
+    // Lo probamos UNA sola vez (rápido) y guardamos el resultado, para no
+    // colgar la app reintentando en cada botón si realmente no está disponible.
+    let storageDisponible = null; // null = todavía no se probó
+ 
+    async function esperarStorage() {
+      if (storageDisponible !== null) return storageDisponible;
+      if (typeof window.storage !== 'undefined') {
+        storageDisponible = true;
+        return true;
       }
-      return typeof window.storage !== 'undefined';
+      // Un solo reintento corto (no 4 segundos en cada clic)
+      await new Promise(r => setTimeout(r, 400));
+      storageDisponible = typeof window.storage !== 'undefined';
+      return storageDisponible;
     }
  
     async function storageGet(key, shared) {
       if (typeof window.storage === 'undefined' && !(await esperarStorage())) {
-        throw new Error('el almacenamiento no está disponible todavía, probá de nuevo en unos segundos');
+        throw new Error('el almacenamiento no está disponible en este entorno');
       }
       return window.storage.get(key, shared);
     }
  
     async function storageSet(key, value, shared) {
       if (typeof window.storage === 'undefined' && !(await esperarStorage())) {
-        throw new Error('el almacenamiento no está disponible todavía, probá de nuevo en unos segundos');
+        throw new Error('el almacenamiento no está disponible en este entorno');
       }
       return window.storage.set(key, value, shared);
     }
