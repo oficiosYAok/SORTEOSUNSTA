@@ -20,9 +20,9 @@
       --shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);
       --radius: 12px;
     }
-
+ 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--bg);
@@ -30,7 +30,7 @@
       line-height: 1.5;
       min-height: 100vh;
     }
-
+ 
     header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       color: white;
@@ -40,7 +40,7 @@
       top: 0;
       z-index: 100;
     }
-
+ 
     header .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -50,25 +50,25 @@
       gap: 1rem;
       flex-wrap: wrap;
     }
-
+ 
     header h1 {
       font-size: 1.5rem;
       font-weight: 700;
       letter-spacing: -0.02em;
     }
-
+ 
     header h1 span {
       font-weight: 400;
       opacity: 0.9;
       font-size: 0.95rem;
     }
-
+ 
     nav {
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
     }
-
+ 
     nav button {
       background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.25);
@@ -80,14 +80,14 @@
       font-weight: 500;
       transition: all 0.2s;
     }
-
+ 
     nav button:hover, nav button.active {
       background: white;
       color: var(--primary);
     }
-
+ 
     .admin-toggle-wrap { display: flex; }
-
+ 
     .btn-admin-toggle {
       background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.25);
@@ -105,21 +105,21 @@
       color: #78350f;
       border-color: #fbbf24;
     }
-
+ 
     .container {
       max-width: 1100px;
       margin: 0 auto;
       padding: 1.5rem;
     }
-
+ 
     .view { display: none; }
     .view.active { display: block; animation: fadeIn 0.25s ease; }
-
+ 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
+ 
     .card {
       background: var(--card);
       border-radius: var(--radius);
@@ -128,7 +128,7 @@
       margin-bottom: 1.5rem;
       border: 1px solid var(--border);
     }
-
+ 
     .card h2 {
       font-size: 1.25rem;
       margin-bottom: 1rem;
@@ -137,30 +137,30 @@
       align-items: center;
       gap: 0.5rem;
     }
-
+ 
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
-
+ 
     .form-stack {
       display: flex;
       flex-direction: column;
       gap: 0;
     }
-
+ 
     .form-stack .form-group {
       margin-bottom: 1.1rem;
     }
-
+ 
     .form-stack .btn {
       width: 100%;
       padding: 0.9rem 1.25rem;
       font-size: 1.05rem;
       margin-top: 0.25rem;
     }
-
+ 
     label {
       display: block;
       font-size: 0.85rem;
@@ -168,7 +168,7 @@
       margin-bottom: 0.35rem;
       color: var(--muted);
     }
-
+ 
     input, select, textarea {
       width: 100%;
       padding: 0.75rem 0.9rem;
@@ -180,15 +180,15 @@
       -webkit-appearance: none;
       appearance: none;
     }
-
+ 
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--primary-light);
       box-shadow: 0 0 0 3px rgba(43,108,176,0.15);
     }
-
+ 
     .form-group { margin-bottom: 1rem; }
-
+ 
     .btn {
       display: inline-flex;
       align-items: center;
@@ -202,31 +202,31 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
+ 
     .btn-primary {
       background: var(--primary-light);
       color: white;
     }
     .btn-primary:hover { background: var(--primary); }
-
+ 
     .btn-accent {
       background: var(--accent);
       color: white;
     }
     .btn-accent:hover { background: var(--accent-hover); }
-
+ 
     .btn-success {
       background: var(--success);
       color: white;
     }
     .btn-success:hover { background: #2f855a; }
-
+ 
     .btn-danger {
       background: var(--danger);
       color: white;
     }
     .btn-danger:hover { background: #c53030; }
-
+ 
     .btn-outline {
       background: transparent;
       border: 1.5px solid var(--border);
@@ -236,36 +236,36 @@
       border-color: var(--primary-light);
       color: var(--primary-light);
     }
-
+ 
     .btn-sm {
       padding: 0.4rem 0.75rem;
       font-size: 0.8rem;
     }
-
+ 
     .btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
-
+ 
     .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
       margin-top: 1rem;
     }
-
+ 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.9rem;
     }
-
+ 
     th, td {
       padding: 0.75rem 0.85rem;
       text-align: left;
       border-bottom: 1px solid var(--border);
     }
-
+ 
     th {
       background: #edf2f7;
       font-weight: 600;
@@ -273,16 +273,16 @@
       position: sticky;
       top: 0;
     }
-
+ 
     tr:hover td { background: #f7fafc; }
-
+ 
     .table-wrap {
       overflow-x: auto;
       max-height: 420px;
       border-radius: 8px;
       border: 1px solid var(--border);
     }
-
+ 
     .badge {
       display: inline-block;
       padding: 0.2rem 0.6rem;
@@ -290,44 +290,44 @@
       font-size: 0.75rem;
       font-weight: 600;
     }
-
+ 
     .badge-success { background: #c6f6d5; color: #276749; }
     .badge-info { background: #bee3f8; color: #2a4365; }
     .badge-warn { background: #feebc8; color: #7b341e; }
-
+ 
     .empty {
       text-align: center;
       padding: 2.5rem 1rem;
       color: var(--muted);
     }
-
+ 
     .empty svg { margin-bottom: 0.75rem; opacity: 0.4; }
-
+ 
     .stats {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
       margin-bottom: 1.25rem;
     }
-
+ 
     .stat {
       background: #edf2f7;
       padding: 0.75rem 1.25rem;
       border-radius: 10px;
       min-width: 120px;
     }
-
+ 
     .stat .num {
       font-size: 1.5rem;
       font-weight: 700;
       color: var(--primary);
     }
-
+ 
     .stat .label {
       font-size: 0.8rem;
       color: var(--muted);
     }
-
+ 
     /* Modal */
     .modal-overlay {
       position: fixed;
@@ -342,12 +342,12 @@
       visibility: hidden;
       transition: all 0.2s;
     }
-
+ 
     .modal-overlay.open {
       opacity: 1;
       visibility: visible;
     }
-
+ 
     .modal {
       background: white;
       border-radius: var(--radius);
@@ -359,9 +359,9 @@
       transform: scale(0.95);
       transition: transform 0.2s;
     }
-
+ 
     .modal-overlay.open .modal { transform: scale(1); }
-
+ 
     .modal-header {
       padding: 1.25rem 1.5rem;
       border-bottom: 1px solid var(--border);
@@ -369,11 +369,11 @@
       justify-content: space-between;
       align-items: center;
     }
-
+ 
     .modal-header h3 { font-size: 1.15rem; color: var(--primary); }
-
+ 
     .modal-body { padding: 1.5rem; }
-
+ 
     .modal-footer {
       padding: 1rem 1.5rem;
       border-top: 1px solid var(--border);
@@ -381,7 +381,7 @@
       justify-content: flex-end;
       gap: 0.75rem;
     }
-
+ 
     .close-btn {
       background: none;
       border: none;
@@ -390,7 +390,7 @@
       color: var(--muted);
       line-height: 1;
     }
-
+ 
     .winner-box {
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       border: 2px solid #f59e0b;
@@ -399,30 +399,30 @@
       text-align: center;
       margin-bottom: 1rem;
     }
-
+ 
     .winner-box .trophy { font-size: 2.5rem; margin-bottom: 0.5rem; }
-
+ 
     .winner-box .name {
       font-size: 1.35rem;
       font-weight: 700;
       color: #92400e;
     }
-
+ 
     .winner-box .school {
       font-size: 1.05rem;
       font-weight: 600;
       color: #b45309;
       margin-top: 0.2rem;
     }
-
+ 
     .winner-box .details {
       font-size: 0.9rem;
       color: #78350f;
       margin-top: 0.35rem;
     }
-
+ 
     .sorteo-resultado-bloque { margin-bottom: 0.5rem; }
-
+ 
     .sorteo-resultado-header {
       display: flex;
       justify-content: space-between;
@@ -433,7 +433,7 @@
       font-size: 1.05rem;
       color: var(--primary);
     }
-
+ 
     .history-item {
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -441,9 +441,9 @@
       margin-bottom: 1rem;
       transition: box-shadow 0.2s;
     }
-
+ 
     .history-item:hover { box-shadow: var(--shadow); }
-
+ 
     .history-item .title-row {
       display: flex;
       justify-content: space-between;
@@ -452,24 +452,24 @@
       flex-wrap: wrap;
       margin-bottom: 0.5rem;
     }
-
+ 
     .history-item .title {
       font-size: 1.1rem;
       font-weight: 600;
       color: var(--primary);
     }
-
+ 
     .history-item .meta {
       font-size: 0.85rem;
       color: var(--muted);
     }
-
+ 
     .history-item .winners-list {
       margin-top: 0.75rem;
       padding-top: 0.75rem;
       border-top: 1px dashed var(--border);
     }
-
+ 
     .file-drop {
       border: 2px dashed var(--border);
       border-radius: 10px;
@@ -479,12 +479,12 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
+ 
     .file-drop:hover, .file-drop.dragover {
       border-color: var(--primary-light);
       background: #ebf8ff;
     }
-
+ 
     .toast {
       position: fixed;
       bottom: 1.5rem;
@@ -500,34 +500,34 @@
       transition: all 0.3s;
       max-width: 320px;
     }
-
+ 
     .toast.show {
       transform: translateY(0);
       opacity: 1;
     }
-
+ 
     .toast.error { background: var(--danger); }
     .toast.success { background: var(--success); }
-
+ 
     .inline-edit {
       display: flex;
       gap: 0.5rem;
       align-items: center;
     }
-
+ 
     .inline-edit input {
       flex: 1;
       padding: 0.4rem 0.6rem;
       font-size: 0.95rem;
     }
-
+ 
     footer {
       text-align: center;
       padding: 1.5rem;
       color: var(--muted);
       font-size: 0.85rem;
     }
-
+ 
     /* ========== Animación de sorteo (overlay ruleta) ========== */
     .spin-overlay {
       position: fixed;
@@ -543,12 +543,12 @@
       transition: opacity 0.35s, visibility 0.35s;
       padding: 1.5rem;
     }
-
+ 
     .spin-overlay.active {
       opacity: 1;
       visibility: visible;
     }
-
+ 
     .spin-name {
       font-size: clamp(1.4rem, 6vw, 2.4rem);
       font-weight: 700;
@@ -560,18 +560,18 @@
       max-width: 90vw;
       word-break: break-word;
     }
-
+ 
     .spin-name.final {
       color: #fbbf24;
       transform: scale(1.15);
       animation: winnerPulse 0.7s ease infinite alternate;
     }
-
+ 
     @keyframes winnerPulse {
       from { transform: scale(1.1); text-shadow: 0 0 20px rgba(251,191,36,0.5); }
       to { transform: scale(1.2); text-shadow: 0 0 40px rgba(251,191,36,0.9); }
     }
-
+ 
     .spin-label {
       color: rgba(255,255,255,0.7);
       font-size: 0.95rem;
@@ -579,7 +579,7 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-
+ 
     .spin-trophy {
       font-size: 3.5rem;
       margin-bottom: 1rem;
@@ -587,12 +587,12 @@
       transform: scale(0.3) rotate(-20deg);
       transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
+ 
     .spin-trophy.show {
       opacity: 1;
       transform: scale(1) rotate(0deg);
     }
-
+ 
     .confetti {
       position: absolute;
       width: 10px;
@@ -601,26 +601,26 @@
       animation: confettiFall 2.5s ease-out forwards;
       pointer-events: none;
     }
-
+ 
     @keyframes confettiFall {
       0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
-
+ 
     .winner-box {
       animation: winnerReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
-
+ 
     .winner-box:nth-child(2) { animation-delay: 0.15s; }
     .winner-box:nth-child(3) { animation-delay: 0.3s; }
     .winner-box:nth-child(4) { animation-delay: 0.45s; }
     .winner-box:nth-child(5) { animation-delay: 0.6s; }
-
+ 
     @keyframes winnerReveal {
       from { opacity: 0; transform: scale(0.7) translateY(30px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
     }
-
+ 
     /* ========== Indicador de sincronización ========== */
     .sync-indicator {
       display: inline-flex;
@@ -640,16 +640,16 @@
       animation: spin 0.7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
+ 
     /* ========== Paso a paso del sorteo ========== */
     .sorteo-step { }
-
+ 
     .big-draw-wrap {
       display: flex;
       justify-content: center;
       padding: 2.5rem 1rem;
     }
-
+ 
     .big-draw-btn {
       width: 210px;
       height: 210px;
@@ -672,31 +672,31 @@
     }
     .big-draw-btn:hover { transform: scale(1.06); }
     .big-draw-btn:active { transform: scale(0.97); }
-
+ 
     .big-draw-icon {
       font-size: 3.6rem;
       display: inline-block;
       animation: iconWiggle 1.8s ease-in-out infinite;
     }
-
+ 
     @keyframes bigPulse {
       0% { box-shadow: 0 0 0 0 rgba(237,137,54,0.55), var(--shadow); }
       70% { box-shadow: 0 0 0 28px rgba(237,137,54,0), var(--shadow); }
       100% { box-shadow: 0 0 0 0 rgba(237,137,54,0), var(--shadow); }
     }
-
+ 
     @keyframes iconWiggle {
       0%, 100% { transform: rotate(0deg); }
       25% { transform: rotate(-12deg); }
       75% { transform: rotate(12deg); }
     }
-
+ 
     .choice-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 1rem;
     }
-
+ 
     .choice-card.configured {
       border-color: var(--success);
     }
@@ -710,7 +710,7 @@
       background: #c6f6d5;
       color: #276749;
     }
-
+ 
     .choice-card {
       background: #f8fafc;
       border: 2px solid var(--border);
@@ -725,126 +725,126 @@
       transition: all 0.2s;
       font-family: inherit;
     }
-
+ 
     .choice-card:hover {
       border-color: var(--primary-light);
       background: #ebf8ff;
       transform: translateY(-3px);
       box-shadow: var(--shadow);
     }
-
+ 
     .choice-icon { font-size: 2.5rem; }
     .choice-title { font-weight: 700; color: var(--primary); font-size: 1rem; }
     .choice-sub { font-size: 0.8rem; color: var(--muted); }
-
+ 
     /* ========== Responsive móvil ========== */
     @media (max-width: 700px) {
       .grid-2 { grid-template-columns: 1fr; }
       .choice-grid { grid-template-columns: 1fr; }
-
+ 
       header {
         padding: 0.9rem 1rem;
       }
-
+ 
       header h1 {
         font-size: 1.2rem;
       }
-
+ 
       header h1 span {
         display: none;
       }
-
+ 
       header .container {
         flex-direction: column;
         align-items: stretch;
         gap: 0.75rem;
       }
-
+ 
       nav {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0.4rem;
       }
-
+ 
       nav button {
         padding: 0.55rem 0.5rem;
         font-size: 0.8rem;
         text-align: center;
       }
-
+ 
       .container {
         padding: 1rem;
       }
-
+ 
       .card {
         padding: 1.15rem;
         margin-bottom: 1rem;
         border-radius: 10px;
       }
-
+ 
       .card h2 {
         font-size: 1.1rem;
       }
-
+ 
       .actions {
         flex-direction: column;
       }
-
+ 
       .actions .btn {
         width: 100%;
       }
-
+ 
       .history-item .title-row {
         flex-direction: column;
         align-items: stretch;
       }
-
+ 
       .history-item .title-row > div:last-child {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0.4rem;
       }
-
+ 
       .history-item .title-row .btn {
         width: 100%;
         justify-content: center;
       }
-
+ 
       .toast {
         left: 1rem;
         right: 1rem;
         bottom: 1rem;
         max-width: none;
       }
-
+ 
       .table-wrap {
         font-size: 0.8rem;
       }
-
+ 
       th, td {
         padding: 0.55rem 0.5rem;
       }
-
+ 
       .stats {
         justify-content: center;
       }
-
+ 
       .modal {
         max-width: 100%;
         margin: 0.5rem;
       }
-
+ 
       .spin-name {
         font-size: 1.5rem;
       }
-
+ 
       .big-draw-btn {
         width: 170px;
         height: 170px;
       }
       .big-draw-icon { font-size: 3rem; }
     }
-
+ 
     @media (max-width: 400px) {
       nav {
         grid-template-columns: 1fr 1fr;
@@ -871,7 +871,7 @@
       </div>
     </div>
   </header>
-
+ 
   <main class="container">
     <!-- ========== INSCRIPCIÓN (pública) ========== -->
     <section id="view-inscripcion" class="view active">
@@ -909,7 +909,7 @@
         </form>
       </div>
     </section>
-
+ 
     <!-- ========== PARTICIPANTES (admin) ========== -->
     <section id="view-participantes" class="view">
       <div class="card">
@@ -926,7 +926,7 @@
           <button class="btn btn-danger btn-sm" id="btn-limpiar-participantes">🗑️ Vaciar lista</button>
           <button class="btn btn-outline btn-sm" id="btn-exportar-participantes">📤 Exportar JSON</button>
         </div>
-
+ 
         <div class="card" style="background:#f8fafc; margin-bottom:1.25rem;">
           <h2 style="font-size:1.05rem;">📂 Cargar participantes desde archivo</h2>
           <p style="color:var(--muted); margin-bottom:1rem; font-size:0.85rem;">
@@ -942,7 +942,7 @@
             <button class="btn btn-outline btn-sm" id="btn-ejemplo-json">⬇️ Descargar plantilla JSON</button>
           </div>
         </div>
-
+ 
         <div class="table-wrap">
           <table>
             <thead>
@@ -965,12 +965,12 @@
         </div>
       </div>
     </section>
-
+ 
     <!-- ========== SORTEO (admin) ========== -->
     <section id="view-sorteo" class="view">
       <div class="card" id="sorteo-card">
         <h2>🎲 Realizar sorteo</h2>
-
+ 
         <!-- Paso 1: botón grande animado -->
         <div id="sorteo-step-inicio" class="sorteo-step">
           <div class="big-draw-wrap">
@@ -980,7 +980,7 @@
             </button>
           </div>
         </div>
-
+ 
         <!-- Paso 2: elegir origen -->
         <div id="sorteo-step-eleccion" class="sorteo-step" style="display:none;">
           <p style="color:var(--muted); margin-bottom:1.25rem; text-align:center;">¿De dónde querés sortear?</p>
@@ -1008,7 +1008,7 @@
             <button class="btn btn-outline btn-sm" id="btn-volver-inicio-1">‹ Volver</button>
           </div>
         </div>
-
+ 
         <!-- Paso 3: cargar archivo (solo si eligió base de datos) -->
         <div id="sorteo-step-archivo" class="sorteo-step" style="display:none;">
           <p style="color:var(--muted); margin-bottom:1rem; font-size:0.9rem;">
@@ -1023,12 +1023,13 @@
             <button class="btn btn-outline btn-sm" id="btn-volver-inicio-2">‹ Volver</button>
           </div>
         </div>
-
+ 
         <!-- Paso 4: configurar y sortear -->
         <div id="sorteo-step-config" class="sorteo-step" style="display:none;">
-          <p style="color:var(--muted); margin-bottom:1.25rem; font-size:0.9rem;">
+          <p style="color:var(--muted); margin-bottom:0.35rem; font-size:0.9rem;">
             Se sorteará entre <strong id="sorteo-count">0</strong> participantes (<span id="sorteo-origen-label"></span>).
           </p>
+          <p id="sorteo-nota-excluidos" style="display:none; color:var(--accent-hover); font-size:0.8rem; margin-bottom:1rem;"></p>
           <div class="grid-2">
             <div class="form-group">
               <label for="sorteo-nombre">Nombre del sorteo</label>
@@ -1045,17 +1046,17 @@
           </div>
         </div>
       </div>
-
+ 
       <div class="card" id="resultado-sorteo" style="display:none;">
         <h2>🏆 Resultados de esta sesión</h2>
-
+ 
         <div id="resumen-sesion" style="display:none; margin-bottom:1.25rem; padding:1rem; background:#f8fafc; border:1px solid var(--border); border-radius:10px;">
           <p style="margin-bottom:0.75rem; font-size:0.9rem; color:var(--muted);">
             Hiciste <strong id="resumen-cantidad-sorteos">0</strong> sorteos en esta sesión, con <strong id="resumen-cantidad-ganadores">0</strong> ganadores en total.
           </p>
           <button class="btn btn-primary btn-sm" id="btn-guardar-combinado">💾 Guardar todos como un solo sorteo en el historial</button>
         </div>
-
+ 
         <div id="ganadores-container"></div>
         <div class="actions">
           <button class="btn btn-accent" id="btn-sortear-de-nuevo">🎲 Sortear de nuevo (mismo grupo)</button>
@@ -1063,7 +1064,7 @@
         </div>
       </div>
     </section>
-
+ 
     <!-- ========== HISTORIAL (admin) ========== -->
     <section id="view-historial" class="view">
       <div class="card">
@@ -1078,11 +1079,11 @@
       </div>
     </section>
   </main>
-
+ 
   <footer>
     Sorteos UNSTA · Datos compartidos en la nube · visibles desde cualquier dispositivo
   </footer>
-
+ 
   <!-- Modal genérico (detalles / re-sortear / login admin) -->
   <div class="modal-overlay" id="modal">
     <div class="modal">
@@ -1094,16 +1095,16 @@
       <div class="modal-footer" id="modal-footer"></div>
     </div>
   </div>
-
+ 
   <!-- Overlay de animación de sorteo -->
   <div class="spin-overlay" id="spin-overlay">
     <div class="spin-trophy" id="spin-trophy">🏆</div>
     <div class="spin-label" id="spin-label">Sorteando...</div>
     <div class="spin-name" id="spin-name">—</div>
   </div>
-
+ 
   <div class="toast" id="toast"></div>
-
+ 
   <script>
     // ========== ESTADO ==========
     // Los datos se guardan en almacenamiento compartido (window.storage con shared=true)
@@ -1111,29 +1112,29 @@
     // donde se cargaron.
     const KEY_PARTICIPANTES = 'participantes';
     const KEY_HISTORIAL = 'historial';
-
+ 
     // Contraseña simple de administrador. OJO: al ser una app 100% del lado del
     // cliente, cualquiera que vea el código fuente puede leer esta contraseña.
     // No es seguridad real, solo evita que alguien borre o sortee por accidente/curiosidad.
     const ADMIN_PASSWORD = 'unsta2026';
     const ADMIN_VIEWS = ['participantes', 'sorteo', 'historial'];
     let isAdmin = false;
-
+ 
     let state = {
       participantes: [],
       historial: []
     };
-
+ 
     // Pool temporal usado durante el flujo de sorteo (puede venir del formulario
     // o de un archivo/Sheets importado para ese sorteo)
     let sorteoPool = [];
     let sorteoOrigen = null; // 'formulario' | 'archivo' | 'sheets'
-
+ 
     // Sorteos realizados en esta sesión, que se van acumulando en pantalla
     // hasta que se guardan (o se descartan) explícitamente. Sortear de nuevo
     // no borra los anteriores.
     let sorteosSesion = [];
-
+ 
     async function fetchParticipantes() {
       try {
         const res = await window.storage.get(KEY_PARTICIPANTES, true);
@@ -1143,17 +1144,27 @@
       }
       return state.participantes;
     }
-
+ 
+    // Se pone en false si la última lectura del historial compartido falló.
+    // Mientras esté en false, no se permite guardar nada en el historial,
+    // para nunca pisar con una copia vieja/incompleta lo que haya en la nube.
+    let historialSyncOk = true;
+ 
     async function fetchHistorial() {
       try {
         const res = await window.storage.get(KEY_HISTORIAL, true);
         state.historial = res && res.value ? JSON.parse(res.value) : [];
+        historialSyncOk = true;
       } catch (e) {
-        state.historial = state.historial || [];
+        historialSyncOk = false;
       }
       return state.historial;
     }
-
+ 
+    function warnHistorialSyncFail() {
+      toast('No se pudo sincronizar con el historial compartido. No se guardó nada, para evitar perder sorteos guardados por otro dispositivo. Probá de nuevo en unos segundos.', 'error');
+    }
+ 
     async function saveParticipantes() {
       try {
         const result = await window.storage.set(KEY_PARTICIPANTES, JSON.stringify(state.participantes), true);
@@ -1162,7 +1173,7 @@
         toast('Error al sincronizar participantes', 'error');
       }
     }
-
+ 
     async function saveHistorial() {
       try {
         const result = await window.storage.set(KEY_HISTORIAL, JSON.stringify(state.historial), true);
@@ -1171,7 +1182,7 @@
         toast('Error al sincronizar el historial', 'error');
       }
     }
-
+ 
     // ========== UTILIDADES ==========
     function toast(msg, type = '') {
       const el = document.getElementById('toast');
@@ -1179,11 +1190,11 @@
       el.className = 'toast show' + (type ? ' ' + type : '');
       setTimeout(() => el.classList.remove('show'), 3200);
     }
-
+ 
     function uid() {
       return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
     }
-
+ 
     function formatDate(iso) {
       const d = new Date(iso);
       return d.toLocaleString('es-AR', {
@@ -1191,14 +1202,14 @@
         hour: '2-digit', minute: '2-digit'
       });
     }
-
+ 
     function setSyncing(elId, on) {
       const el = document.getElementById(elId);
       if (!el) return;
       el.style.display = on ? 'inline-flex' : 'none';
       el.classList.toggle('loading', on);
     }
-
+ 
     function escapeHtml(str) {
       return String(str || '')
         .replace(/&/g, '&amp;')
@@ -1206,7 +1217,7 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
     }
-
+ 
     // ========== MODO ADMIN ==========
     async function checkAdminSession() {
       try {
@@ -1217,7 +1228,7 @@
       }
       updateAdminUI();
     }
-
+ 
     function updateAdminUI() {
       const toggleBtn = document.getElementById('btn-admin-toggle');
       toggleBtn.textContent = isAdmin ? '🔓 Salir modo admin' : '🔒 Admin';
@@ -1229,7 +1240,7 @@
         }
       });
     }
-
+ 
     function promptAdminLogin(onSuccess) {
       openModal('Acceso administrador', `
         <div class="form-group">
@@ -1242,7 +1253,7 @@
       `);
       const input = document.getElementById('admin-password-input');
       setTimeout(() => input.focus(), 60);
-
+ 
       const tryLogin = async () => {
         if (input.value === ADMIN_PASSWORD) {
           isAdmin = true;
@@ -1255,12 +1266,12 @@
           toast('Contraseña incorrecta', 'error');
         }
       };
-
+ 
       document.getElementById('modal-ok').onclick = tryLogin;
       input.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
       document.getElementById('modal-cancel').onclick = closeModal;
     }
-
+ 
     document.getElementById('btn-admin-toggle').addEventListener('click', async () => {
       if (isAdmin) {
         if (confirm('¿Salir del modo admin?')) {
@@ -1277,7 +1288,7 @@
       }
       promptAdminLogin();
     });
-
+ 
     // ========== NAVEGACIÓN ==========
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
@@ -1289,12 +1300,12 @@
         await goToView(view);
       });
     });
-
+ 
     async function goToView(view) {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById('view-' + view).classList.add('active');
-
+ 
       if (view === 'participantes') {
         setSyncing('sync-participantes', true);
         await fetchParticipantes();
@@ -1307,7 +1318,7 @@
         sorteosSesion = [];
         document.getElementById('resultado-sorteo').style.display = 'none';
         document.getElementById('sorteo-nombre').value = '';
-
+ 
         const sheetsCfg = await fetchSheetsConfig();
         if (sheetsCfg) {
           // Hay una hoja conectada: cargamos directo, sin pasar por ningún botón intermedio.
@@ -1322,7 +1333,7 @@
         renderHistorial();
       }
     }
-
+ 
     document.getElementById('btn-refrescar-participantes').addEventListener('click', async () => {
       setSyncing('sync-participantes', true);
       await fetchParticipantes();
@@ -1330,22 +1341,22 @@
       renderParticipantes();
       toast('Lista actualizada');
     });
-
+ 
     document.getElementById('btn-refrescar-historial').addEventListener('click', async () => {
       await fetchHistorial();
       renderHistorial();
       toast('Historial actualizado');
     });
-
+ 
     // ========== FORMULARIO DE INSCRIPCIÓN (público) ==========
     document.getElementById('form-inscripcion').addEventListener('submit', async e => {
       e.preventDefault();
       const submitBtn = document.getElementById('btn-submit-inscripcion');
       submitBtn.disabled = true;
       submitBtn.textContent = 'Enviando...';
-
+ 
       await fetchParticipantes();
-
+ 
       const p = {
         id: uid(),
         apellidoNombre: document.getElementById('apellidoNombre').value.trim(),
@@ -1355,14 +1366,14 @@
         carrera: document.getElementById('carrera').value.trim(),
         legajo: document.getElementById('legajo').value.trim()
       };
-
+ 
       if (state.participantes.some(x => x.dni === p.dni)) {
         toast('Ya existe un participante con ese DNI', 'error');
         submitBtn.disabled = false;
         submitBtn.textContent = '🎯 Participar del sorteo';
         return;
       }
-
+ 
       state.participantes.push(p);
       await saveParticipantes();
       e.target.reset();
@@ -1370,11 +1381,11 @@
       submitBtn.disabled = false;
       submitBtn.textContent = '🎯 Participar del sorteo';
     });
-
+ 
     // ========== IMPORTAR ARCHIVO A LA LISTA DE PARTICIPANTES (admin) ==========
     const fileDrop = document.getElementById('file-drop');
     const fileInput = document.getElementById('file-input');
-
+ 
     fileDrop.addEventListener('click', () => fileInput.click());
     fileDrop.addEventListener('dragover', e => {
       e.preventDefault();
@@ -1390,7 +1401,7 @@
       if (fileInput.files.length) handleFile(fileInput.files[0]);
       fileInput.value = '';
     });
-
+ 
     function handleFile(file) {
       const reader = new FileReader();
       reader.onload = ev => {
@@ -1409,7 +1420,7 @@
       };
       reader.readAsText(file, 'UTF-8');
     }
-
+ 
     // Divide una línea de CSV respetando comas dentro de comillas (ej: "Escuela, N°5")
     function splitCsvLine(line) {
       const result = [];
@@ -1433,7 +1444,7 @@
       result.push(cur);
       return result.map(s => s.trim());
     }
-
+ 
     function normalizeHeader(h) {
       return h
         .replace(/^\uFEFF/, '')          // BOM que a veces agrega Google al exportar
@@ -1442,7 +1453,7 @@
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // sin acentos: institución -> institucion
         .replace(/\s+/g, '');
     }
-
+ 
     function parseCSV(text) {
       const clean = text.replace(/^\uFEFF/, '').trim();
       const lines = clean.split(/\r?\n/);
@@ -1495,7 +1506,24 @@
       }
       return result;
     }
-
+ 
+    // Si la misma persona (mismo DNI) aparece dos veces en la hoja/archivo,
+    // nos quedamos solo con la primera fila para que no pueda "ganar dos veces"
+    // en un mismo sorteo por estar duplicada en el origen de datos.
+    function dedupPorDni(lista) {
+      const vistos = new Set();
+      const result = [];
+      lista.forEach(p => {
+        const key = (p.dni || '').trim();
+        if (key) {
+          if (vistos.has(key)) return;
+          vistos.add(key);
+        }
+        result.push(p);
+      });
+      return result;
+    }
+ 
     function normalizarLista(lista) {
       const result = [];
       lista.forEach(raw => {
@@ -1510,9 +1538,9 @@
         };
         if (p.apellidoNombre) result.push(p);
       });
-      return result;
+      return dedupPorDni(result);
     }
-
+ 
     // Para el origen "Google Sheets": solo se leen nombre, dni y escuela.
     function normalizarListaSheets(lista) {
       const result = [];
@@ -1525,9 +1553,9 @@
         };
         if (p.apellidoNombre) result.push(p);
       });
-      return result;
+      return dedupPorDni(result);
     }
-
+ 
     async function importarParticipantes(lista) {
       await fetchParticipantes();
       let added = 0;
@@ -1557,7 +1585,7 @@
       renderParticipantes();
       toast(`Importados: ${added} · Omitidos (duplicados/inválidos): ${skipped}`, added ? 'success' : 'error');
     }
-
+ 
     // Plantillas
     document.getElementById('btn-ejemplo-csv').addEventListener('click', () => {
       const csv = 'apellidoNombre,dni,celular,mail,carrera,legajo\nPérez Juan,30123456,3855123456,juan@mail.com,Ingeniería en Sistemas,2023-0456\nGarcía María,28987654,3855987654,maria@mail.com,Contador Público,2022-0123';
@@ -1570,7 +1598,7 @@
       ], null, 2);
       downloadBlob(json, 'plantilla_participantes.json', 'application/json');
     });
-
+ 
     function downloadBlob(content, filename, type) {
       const blob = new Blob([content], { type });
       const url = URL.createObjectURL(blob);
@@ -1580,13 +1608,13 @@
       a.click();
       URL.revokeObjectURL(url);
     }
-
+ 
     // ========== PARTICIPANTES (admin) ==========
     function renderParticipantes() {
       const tbody = document.getElementById('tbody-participantes');
       const empty = document.getElementById('empty-participantes');
       document.getElementById('stat-total').textContent = state.participantes.length;
-
+ 
       if (!state.participantes.length) {
         tbody.innerHTML = '';
         empty.style.display = 'block';
@@ -1605,7 +1633,7 @@
           <td><button class="btn btn-danger btn-sm" data-id="${p.id}" title="Eliminar">✕</button></td>
         </tr>
       `).join('');
-
+ 
       tbody.querySelectorAll('button[data-id]').forEach(btn => {
         btn.addEventListener('click', async () => {
           if (confirm('¿Eliminar este participante?')) {
@@ -1617,7 +1645,7 @@
         });
       });
     }
-
+ 
     document.getElementById('btn-limpiar-participantes').addEventListener('click', async () => {
       if (!state.participantes.length) return;
       if (confirm('¿Seguro que querés vaciar toda la lista de participantes? Esto afecta a todos los dispositivos.')) {
@@ -1627,7 +1655,7 @@
         toast('Lista vaciada');
       }
     });
-
+ 
     document.getElementById('btn-exportar-participantes').addEventListener('click', async () => {
       await fetchParticipantes();
       if (!state.participantes.length) {
@@ -1637,28 +1665,28 @@
       const data = state.participantes.map(({ id, ...rest }) => rest);
       downloadBlob(JSON.stringify(data, null, 2), 'participantes_unsta.json', 'application/json');
     });
-
+ 
     // ========== SORTEO (admin) — flujo en pasos ==========
     function showSorteoStep(step) {
       ['inicio', 'eleccion', 'archivo', 'config'].forEach(s => {
         document.getElementById('sorteo-step-' + s).style.display = (s === step) ? 'block' : 'none';
       });
     }
-
+ 
     document.getElementById('btn-iniciar-sorteo').addEventListener('click', async () => {
       await fetchParticipantes();
       document.getElementById('choice-count-formulario').textContent = state.participantes.length + ' participante' + (state.participantes.length === 1 ? '' : 's');
-
+ 
       const sheetsCfg = await fetchSheetsConfig();
       const sheetsCard = document.getElementById('btn-origen-sheets');
       const sheetsSub = document.getElementById('choice-sub-sheets');
       const cfgBtn = document.getElementById('btn-config-sheets');
-
+ 
       if (sheetsCfg) {
         sheetsSub.textContent = 'Conectada · tocá para sortear';
         sheetsCard.classList.add('configured');
         cfgBtn.style.display = 'inline-flex';
-
+ 
         // Ya hay una hoja conectada: cargamos directo desde ahí y nos salteamos
         // la pantalla de elección. Si falla, mostramos la elección igual para
         // que se pueda reintentar o usar otro origen.
@@ -1670,14 +1698,14 @@
         sheetsCard.classList.remove('configured');
         cfgBtn.style.display = 'none';
       }
-
+ 
       showSorteoStep('eleccion');
     });
-
+ 
     document.getElementById('btn-volver-inicio-1').addEventListener('click', () => showSorteoStep('inicio'));
     document.getElementById('btn-volver-inicio-2').addEventListener('click', () => showSorteoStep('inicio'));
     document.getElementById('btn-volver-eleccion').addEventListener('click', () => showSorteoStep('eleccion'));
-
+ 
     document.getElementById('btn-origen-formulario').addEventListener('click', () => {
       if (!state.participantes.length) {
         toast('No hay participantes en el formulario todavía', 'error');
@@ -1689,26 +1717,26 @@
       updateSorteoConfigCount();
       showSorteoStep('config');
     });
-
+ 
     document.getElementById('btn-origen-archivo').addEventListener('click', () => {
       sorteoOrigen = 'archivo';
       showSorteoStep('archivo');
     });
-
+ 
     // ========== GOOGLE SHEETS (origen en vivo, sin re-importar) ==========
     const KEY_SHEETS_CONFIG = 'sheets_config';
-
+ 
     function parseSheetsUrl(url) {
       const idMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
       if (!idMatch) return null;
       const gidMatch = url.match(/[?&#]gid=([0-9]+)/);
       return { id: idMatch[1], gid: gidMatch ? gidMatch[1] : '0' };
     }
-
+ 
     function buildGvizCsvUrl(id, gid) {
       return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}`;
     }
-
+ 
     async function fetchSheetsConfig() {
       try {
         const res = await window.storage.get(KEY_SHEETS_CONFIG, true);
@@ -1717,15 +1745,21 @@
         return null;
       }
     }
-
+ 
     async function saveSheetsConfig(cfg) {
       try {
-        await window.storage.set(KEY_SHEETS_CONFIG, JSON.stringify(cfg), true);
+        const result = await window.storage.set(KEY_SHEETS_CONFIG, JSON.stringify(cfg), true);
+        if (!result) {
+          toast('No se pudo guardar la conexión con Sheets (la app no confirmó el guardado)', 'error');
+          return false;
+        }
+        return true;
       } catch (e) {
-        toast('No se pudo guardar la configuración de Sheets', 'error');
+        toast('Error al guardar la configuración de Sheets: ' + e.message, 'error');
+        return false;
       }
     }
-
+ 
     async function loadSheetsCsvRows(cfg) {
       const csvUrl = buildGvizCsvUrl(cfg.id, cfg.gid);
       const resp = await fetch(csvUrl);
@@ -1739,7 +1773,7 @@
       }
       return parseCSV(text);
     }
-
+ 
     function promptSheetsConfig(existingCfg) {
       openModal('Conectar Google Sheets', `
         <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">
@@ -1763,17 +1797,19 @@
           return;
         }
         const cfg = { url, id: parsed.id, gid: parsed.gid };
-        await saveSheetsConfig(cfg);
+        const guardado = await saveSheetsConfig(cfg);
         closeModal();
+        if (!guardado) return;
+        toast('Hoja conectada y guardada. La próxima vez se va a cargar sola.', 'success');
         await loadFromSheets(cfg);
       };
       document.getElementById('modal-cancel').onclick = closeModal;
     }
-
+ 
     async function loadFromSheets(cfg) {
       try {
         const rawRows = await loadSheetsCsvRows(cfg);
-
+ 
         if (!rawRows.length) {
           openModal('La hoja no tiene datos', `
             <p>Se pudo conectar con la hoja, pero no encontré ninguna fila de datos debajo del encabezado.</p>
@@ -1785,7 +1821,7 @@
           document.getElementById('modal-cancel').onclick = closeModal;
           return false;
         }
-
+ 
         const normalizados = normalizarListaSheets(rawRows);
         if (!normalizados.length) {
           const headersDetectados = Object.keys(rawRows[0]).join(', ') || '(ninguno)';
@@ -1800,13 +1836,13 @@
           document.getElementById('modal-cancel').onclick = closeModal;
           return false;
         }
-
+ 
         sorteoOrigen = 'sheets';
         sorteoPool = normalizados;
         document.getElementById('sorteo-origen-label').textContent = 'la hoja de Google Sheets conectada';
         updateSorteoConfigCount();
         showSorteoStep('config');
-
+ 
         const conEscuela = normalizados.filter(p => p.escuela).length;
         if (conEscuela === 0) {
           const headersDetectados = Object.keys(rawRows[0]).join(', ') || '(ninguno)';
@@ -1822,7 +1858,7 @@
         return false;
       }
     }
-
+ 
     document.getElementById('btn-origen-sheets').addEventListener('click', async () => {
       const cfg = await fetchSheetsConfig();
       if (!cfg) {
@@ -1832,15 +1868,15 @@
       toast('Cargando datos de Google Sheets...');
       await loadFromSheets(cfg);
     });
-
+ 
     document.getElementById('btn-config-sheets').addEventListener('click', async () => {
       const cfg = await fetchSheetsConfig();
       promptSheetsConfig(cfg);
     });
-
+ 
     const fileDropSorteo = document.getElementById('file-drop-sorteo');
     const fileInputSorteo = document.getElementById('file-input-sorteo');
-
+ 
     fileDropSorteo.addEventListener('click', () => fileInputSorteo.click());
     fileDropSorteo.addEventListener('dragover', e => {
       e.preventDefault();
@@ -1856,7 +1892,7 @@
       if (fileInputSorteo.files.length) handleFileSorteo(fileInputSorteo.files[0]);
       fileInputSorteo.value = '';
     });
-
+ 
     function handleFileSorteo(file) {
       const reader = new FileReader();
       reader.onload = ev => {
@@ -1884,33 +1920,55 @@
       };
       reader.readAsText(file, 'UTF-8');
     }
-
-    function updateSorteoConfigCount() {
-      document.getElementById('sorteo-count').textContent = sorteoPool.length;
-      const max = Math.max(1, sorteoPool.length);
-      document.getElementById('sorteo-cantidad').max = max;
-      document.getElementById('sorteo-cantidad').value = 1;
+ 
+    // Devuelve el pool sin las personas que ya ganaron en algún sorteo previo
+    // de esta sesión, para que nadie pueda salir sorteado dos veces al usar
+    // "Sortear de nuevo" con el mismo grupo.
+    function poolDisponible() {
+      const yaGanaronIds = new Set();
+      sorteosSesion.forEach(s => s.ganadores.forEach(g => yaGanaronIds.add(g.id)));
+      return sorteoPool.filter(p => !yaGanaronIds.has(p.id));
     }
-
+ 
+    function updateSorteoConfigCount() {
+      const disponibles = poolDisponible();
+      const yaGanaron = sorteoPool.length - disponibles.length;
+ 
+      document.getElementById('sorteo-count').textContent = disponibles.length;
+      const max = Math.max(1, disponibles.length);
+      document.getElementById('sorteo-cantidad').max = max;
+      document.getElementById('sorteo-cantidad').value = disponibles.length ? 1 : 0;
+ 
+      const notaEl = document.getElementById('sorteo-nota-excluidos');
+      if (yaGanaron > 0) {
+        notaEl.textContent = `(${yaGanaron} ya ganaron antes en esta sesión y no vuelven a participar)`;
+        notaEl.style.display = 'block';
+      } else {
+        notaEl.style.display = 'none';
+      }
+    }
+ 
     document.getElementById('btn-sortear').addEventListener('click', () => {
       const n = parseInt(document.getElementById('sorteo-cantidad').value, 10) || 1;
-      if (!sorteoPool.length) {
-        toast('No hay participantes para sortear', 'error');
+      const disponibles = poolDisponible();
+ 
+      if (!disponibles.length) {
+        toast('No quedan participantes disponibles: todos ya ganaron antes en esta sesión', 'error');
         return;
       }
-      if (n < 1 || n > sorteoPool.length) {
+      if (n < 1 || n > disponibles.length) {
         toast('Cantidad de ganadores inválida', 'error');
         return;
       }
-
-      const pool = [...sorteoPool];
+ 
+      const pool = [...disponibles];
       for (let i = pool.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [pool[i], pool[j]] = [pool[j], pool[i]];
       }
       const ganadores = pool.slice(0, n);
       const nombre = document.getElementById('sorteo-nombre').value.trim() || `Sorteo ${formatDate(new Date().toISOString())}`;
-
+ 
       const nuevoSorteo = {
         id: uid(),
         nombre,
@@ -1921,32 +1979,32 @@
         origen: sorteoOrigen,
         guardado: false
       };
-
-      animarSorteo(sorteoPool, ganadores, () => {
+ 
+      animarSorteo(disponibles, ganadores, () => {
         sorteosSesion.unshift(nuevoSorteo);
         renderSorteosSesion();
       });
     });
-
-
+ 
+ 
     function animarSorteo(participantes, ganadores, onDone) {
       const overlay = document.getElementById('spin-overlay');
       const nameEl = document.getElementById('spin-name');
       const labelEl = document.getElementById('spin-label');
       const trophyEl = document.getElementById('spin-trophy');
-
+ 
       nameEl.classList.remove('final');
       trophyEl.classList.remove('show');
       labelEl.textContent = 'Sorteando...';
       overlay.classList.add('active');
-
+ 
       overlay.querySelectorAll('.confetti').forEach(c => c.remove());
-
+ 
       const nombres = participantes.map(p => p.apellidoNombre);
       let ticks = 0;
       const totalTicks = 28 + Math.floor(Math.random() * 10);
       let delay = 40;
-
+ 
       function tick() {
         if (ticks < totalTicks) {
           const randomName = nombres[Math.floor(Math.random() * nombres.length)];
@@ -1965,7 +2023,7 @@
           labelEl.textContent = ganadores.length === 1 ? '¡Ganador!' : '¡Ganadores!';
           trophyEl.classList.add('show');
           lanzarConfetti(overlay);
-
+ 
           setTimeout(() => {
             overlay.classList.remove('active');
             onDone();
@@ -1974,7 +2032,7 @@
       }
       tick();
     }
-
+ 
     function lanzarConfetti(container) {
       const colors = ['#fbbf24', '#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6'];
       for (let i = 0; i < 50; i++) {
@@ -1989,7 +2047,7 @@
         container.appendChild(c);
       }
     }
-
+ 
     // Arma la línea de detalle de un participante mostrando solo los campos
     // que ese registro realmente tiene (varía según el origen: formulario,
     // archivo o Google Sheets con solo nombre/dni/escuela).
@@ -2001,7 +2059,7 @@
       if (p.mail) parts.push(escapeHtml(p.mail));
       return parts.join(' · ');
     }
-
+ 
     function winnerBoxHtml(g, i) {
       return `
         <div class="winner-box">
@@ -2012,23 +2070,23 @@
         </div>
       `;
     }
-
+ 
     // Dibuja TODOS los sorteos hechos en esta sesión (el más reciente primero),
     // cada uno con su propio botón de guardar, sin pisar los anteriores.
     function renderSorteosSesion() {
       const wrap = document.getElementById('resultado-sorteo');
       const cont = document.getElementById('ganadores-container');
       const resumen = document.getElementById('resumen-sesion');
-
+ 
       if (!sorteosSesion.length) {
         wrap.style.display = 'none';
         cont.innerHTML = '';
         resumen.style.display = 'none';
         return;
       }
-
+ 
       wrap.style.display = 'block';
-
+ 
       const totalGanadores = sorteosSesion.reduce((acc, s) => acc + s.ganadores.length, 0);
       if (sorteosSesion.length > 1) {
         document.getElementById('resumen-cantidad-sorteos').textContent = sorteosSesion.length;
@@ -2037,7 +2095,7 @@
       } else {
         resumen.style.display = 'none';
       }
-
+ 
       cont.innerHTML = sorteosSesion.map((sorteo, idx) => `
         <div class="sorteo-resultado-bloque">
           <div class="sorteo-resultado-header">
@@ -2052,18 +2110,19 @@
           </div>
         </div>
       `).join('<hr style="margin:1.5rem 0; border:none; border-top:1px dashed var(--border);">');
-
+ 
       cont.querySelectorAll('.btn-guardar-uno').forEach(btn => {
         btn.addEventListener('click', () => guardarSorteoSesion(+btn.dataset.idx));
       });
-
+ 
       wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-
+ 
     async function guardarSorteoSesion(idx) {
       const sorteo = sorteosSesion[idx];
       if (!sorteo || sorteo.guardado) return;
       await fetchHistorial();
+      if (!historialSyncOk) { warnHistorialSyncFail(); return; }
       if (!state.historial.some(h => h.id === sorteo.id)) {
         state.historial.unshift({ ...sorteo });
         await saveHistorial();
@@ -2072,13 +2131,13 @@
       renderSorteosSesion();
       toast('Sorteo guardado en el historial', 'success');
     }
-
+ 
     // Junta TODOS los sorteos hechos en esta sesión (todos sus ganadores y la
     // unión de participantes) en un único registro del historial.
     document.getElementById('btn-guardar-combinado').addEventListener('click', () => {
       if (!sorteosSesion.length) return;
       const totalGanadores = sorteosSesion.reduce((acc, s) => acc + s.ganadores.length, 0);
-
+ 
       openModal('Guardar todos como un solo sorteo', `
         <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">
           Se va a crear un único registro en el historial con los <strong>${totalGanadores}</strong> ganadores
@@ -2092,17 +2151,17 @@
         <button class="btn btn-outline" id="modal-cancel">Cancelar</button>
         <button class="btn btn-primary" id="modal-ok">Guardar</button>
       `);
-
+ 
       document.getElementById('modal-ok').onclick = async () => {
         const nombre = document.getElementById('combinado-nombre').value.trim() || `Sorteo combinado ${formatDate(new Date().toISOString())}`;
-
+ 
         const ganadoresCombinados = [];
         sorteosSesion.forEach(s => ganadoresCombinados.push(...s.ganadores));
-
+ 
         const participantesMap = new Map();
         sorteosSesion.forEach(s => s.participantesSnapshot.forEach(p => participantesMap.set(p.id, p)));
         const participantesCombinados = Array.from(participantesMap.values());
-
+ 
         const combinado = {
           id: uid(),
           nombre,
@@ -2112,28 +2171,30 @@
           cantidadGanadores: ganadoresCombinados.length,
           origen: sorteoOrigen
         };
-
+ 
         await fetchHistorial();
+        if (!historialSyncOk) { warnHistorialSyncFail(); closeModal(); return; }
         state.historial.unshift(combinado);
         await saveHistorial();
-
+ 
         sorteosSesion.forEach(s => { s.guardado = true; });
         renderSorteosSesion();
-
+ 
         closeModal();
         toast('Sorteo combinado guardado en el historial', 'success');
       };
       document.getElementById('modal-cancel').onclick = closeModal;
     });
-
+ 
     // Vuelve a sortear con el mismo grupo de participantes (formulario, archivo
     // o Sheets ya cargado), sin borrar los sorteos anteriores de esta sesión ni
     // pedir de nuevo el link de Sheets.
     document.getElementById('btn-sortear-de-nuevo').addEventListener('click', () => {
+      updateSorteoConfigCount();
       showSorteoStep('config');
       document.getElementById('sorteo-step-config').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-
+ 
     document.getElementById('btn-nuevo-sorteo').addEventListener('click', () => {
       sorteosSesion = [];
       document.getElementById('resultado-sorteo').style.display = 'none';
@@ -2142,19 +2203,19 @@
       sorteoOrigen = null;
       showSorteoStep('inicio');
     });
-
+ 
     // ========== HISTORIAL (admin) ==========
     function renderHistorial() {
       const lista = document.getElementById('historial-lista');
       const empty = document.getElementById('empty-historial');
-
+ 
       if (!state.historial.length) {
         lista.innerHTML = '';
         empty.style.display = 'block';
         return;
       }
       empty.style.display = 'none';
-
+ 
       lista.innerHTML = state.historial.map(h => `
         <div class="history-item" data-id="${h.id}">
           <div class="title-row">
@@ -2175,7 +2236,7 @@
           </div>
         </div>
       `).join('');
-
+ 
       lista.querySelectorAll('.btn-rename').forEach(btn => {
         btn.addEventListener('click', () => renameSorteo(btn.dataset.id));
       });
@@ -2188,6 +2249,13 @@
       lista.querySelectorAll('.btn-borrar').forEach(btn => {
         btn.addEventListener('click', async () => {
           if (confirm('¿Eliminar este sorteo del historial?')) {
+            await fetchHistorial();
+            if (!historialSyncOk) { warnHistorialSyncFail(); return; }
+            if (!state.historial.some(x => x.id === btn.dataset.id)) {
+              toast('Ese sorteo ya no está en el historial (puede que lo hayan borrado desde otro dispositivo)');
+              renderHistorial();
+              return;
+            }
             state.historial = state.historial.filter(x => x.id !== btn.dataset.id);
             await saveHistorial();
             renderHistorial();
@@ -2196,7 +2264,7 @@
         });
       });
     }
-
+ 
     function renameSorteo(id) {
       const h = state.historial.find(x => x.id === id);
       if (!h) return;
@@ -2212,7 +2280,16 @@
       document.getElementById('modal-ok').onclick = async () => {
         const nuevo = document.getElementById('nuevo-nombre').value.trim();
         if (nuevo) {
-          h.nombre = nuevo;
+          await fetchHistorial();
+          if (!historialSyncOk) { warnHistorialSyncFail(); closeModal(); return; }
+          const fresh = state.historial.find(x => x.id === id);
+          if (!fresh) {
+            toast('Ese sorteo ya no está en el historial', 'error');
+            closeModal();
+            renderHistorial();
+            return;
+          }
+          fresh.nombre = nuevo;
           await saveHistorial();
           renderHistorial();
           toast('Nombre actualizado', 'success');
@@ -2221,7 +2298,7 @@
       };
       document.getElementById('modal-cancel').onclick = closeModal;
     }
-
+ 
     function verParticipantes(id) {
       const h = state.historial.find(x => x.id === id);
       if (!h) return;
@@ -2229,12 +2306,12 @@
       const hasLegajo = snapshot.some(p => p.legajo);
       const hasCarrera = snapshot.some(p => p.carrera);
       const hasEscuela = snapshot.some(p => p.escuela);
-
+ 
       const cols = [{ key: 'apellidoNombre', label: 'Nombre' }, { key: 'dni', label: 'DNI' }];
       if (hasLegajo) cols.push({ key: 'legajo', label: 'Legajo' });
       if (hasCarrera) cols.push({ key: 'carrera', label: 'Carrera' });
       if (hasEscuela) cols.push({ key: 'escuela', label: 'Escuela' });
-
+ 
       const headHtml = cols.map(c => `<th>${c.label}</th>`).join('');
       const rows = snapshot.map((p, i) => `
         <tr>
@@ -2255,7 +2332,7 @@
       `, `<button class="btn btn-outline" id="modal-cancel">Cerrar</button>`);
       document.getElementById('modal-cancel').onclick = closeModal;
     }
-
+ 
     function resortear(id) {
       const h = state.historial.find(x => x.id === id);
       if (!h) return;
@@ -2273,7 +2350,7 @@
         <button class="btn btn-outline" id="modal-cancel">Cancelar</button>
         <button class="btn btn-accent" id="modal-ok">🎯 Sortear</button>
       `);
-
+ 
       document.getElementById('modal-ok').onclick = () => {
         const n = parseInt(document.getElementById('re-cantidad').value, 10) || 1;
         if (n < 1 || n > h.participantesSnapshot.length) {
@@ -2287,7 +2364,7 @@
         }
         const ganadores = pool.slice(0, n);
         const nombre = document.getElementById('re-nombre').value.trim() || `${h.nombre} (re-sorteo)`;
-
+ 
         const nuevo = {
           id: uid(),
           nombre,
@@ -2296,9 +2373,11 @@
           participantesSnapshot: [...h.participantesSnapshot],
           cantidadGanadores: n
         };
-
+ 
         closeModal();
         animarSorteo(h.participantesSnapshot, ganadores, async () => {
+          await fetchHistorial();
+          if (!historialSyncOk) { warnHistorialSyncFail(); return; }
           state.historial.unshift(nuevo);
           await saveHistorial();
           renderHistorial();
@@ -2307,7 +2386,7 @@
       };
       document.getElementById('modal-cancel').onclick = closeModal;
     }
-
+ 
     // ========== MODAL ==========
     function openModal(title, bodyHtml, footerHtml) {
       document.getElementById('modal-title').textContent = title;
@@ -2322,7 +2401,7 @@
     document.getElementById('modal').addEventListener('click', e => {
       if (e.target === document.getElementById('modal')) closeModal();
     });
-
+ 
     // ========== INICIO ==========
     async function init() {
       await checkAdminSession();
