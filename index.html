@@ -1143,10 +1143,10 @@
     // y pegar acá abajo la URL que te da Google al implementarlo (termina
     // en /exec).
     // ============================================================
-    const APPS_SCRIPT_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwF15zbvfzoZaEgdX4XNWJVAwwF7FfhzWW40gKKGd1QqCVKAZhYLPjpE5ERqYywlbki/exec';
 
     async function storageGet(key) {
-      if (APPS_SCRIPT_URL.includes('PEGA_AQUI')) {
+      if (APPS_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbwF15zbvfzoZaEgdX4XNWJVAwwF7FfhzWW40gKKGd1QqCVKAZhYLPjpE5ERqYywlbki/exec')) {
         throw new Error('todavía no configuraste la URL de Apps Script en el archivo (buscá APPS_SCRIPT_URL)');
       }
       const resp = await fetch(`${APPS_SCRIPT_URL}?key=${encodeURIComponent(key)}`);
@@ -1156,7 +1156,7 @@
     }
 
     async function storageSet(key, value) {
-      if (APPS_SCRIPT_URL.includes('PEGA_AQUI')) {
+      if (APPS_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbwF15zbvfzoZaEgdX4XNWJVAwwF7FfhzWW40gKKGd1QqCVKAZhYLPjpE5ERqYywlbki/exec')) {
         throw new Error('todavía no configuraste la URL de Apps Script en el archivo (buscá APPS_SCRIPT_URL)');
       }
       const resp = await fetch(APPS_SCRIPT_URL, {
