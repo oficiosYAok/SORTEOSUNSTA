@@ -701,12 +701,7 @@
       word-break: break-word;
     }
 
-    .spin-name.final {
-      color: #fbbf24;
-      transform: scale(1.15);
-      animation: winnerPulse 0.7s ease infinite alternate;
-    }
-
+    /* .spin-name.final styles + letter reveal viven en el bloque ADVANCED */
     @keyframes winnerPulse {
       from { transform: scale(1.1); text-shadow: 0 0 20px rgba(251,191,36,0.5); }
       to { transform: scale(1.2); text-shadow: 0 0 40px rgba(251,191,36,0.9); }
@@ -733,33 +728,12 @@
       transform: scale(1) rotate(0deg);
     }
 
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      animation: confettiFall 2.5s ease-out forwards;
-      pointer-events: none;
-    }
-
-    @keyframes confettiFall {
-      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
-
-    .winner-box {
-      animation: winnerReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-    }
-
-    .winner-box:nth-child(2) { animation-delay: 0.15s; }
-    .winner-box:nth-child(3) { animation-delay: 0.3s; }
-    .winner-box:nth-child(4) { animation-delay: 0.45s; }
-    .winner-box:nth-child(5) { animation-delay: 0.6s; }
-
-    @keyframes winnerReveal {
-      from { opacity: 0; transform: scale(0.7) translateY(30px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
+    /* Confetti base styles + keyframes viven en el bloque ADVANCED más abajo.
+       Aquí solo dejamos los delays escalonados de las cajas de ganadores. */
+    .winner-box:nth-child(2) { animation-delay: 0.12s; }
+    .winner-box:nth-child(3) { animation-delay: 0.24s; }
+    .winner-box:nth-child(4) { animation-delay: 0.36s; }
+    .winner-box:nth-child(5) { animation-delay: 0.48s; }
 
     /* ========== Indicador de sincronización ========== */
     .sync-indicator {
@@ -1016,6 +990,186 @@
       nav button {
         font-size: 0.75rem;
         padding: 0.5rem 0.35rem;
+      }
+    }
+
+    /* ============================================================
+       ADVANCED ANIMATIONS (2026)
+       View Transitions · Springs · Scroll-driven · Letter reveal
+       ============================================================ */
+
+    /* --- View Transitions --- */
+    @supports (view-transition-name: none) {
+      .nav-btn.active {
+        view-transition-name: active-nav;
+      }
+      .card h2 {
+        view-transition-name: section-heading;
+      }
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.32s;
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    ::view-transition-old(active-nav),
+    ::view-transition-new(active-nav) {
+      height: 100%;
+      overflow: clip;
+    }
+
+    /* --- Spring-style winner reveal (stronger overshoot) --- */
+    @keyframes springIn {
+      0%   { opacity: 0; transform: scale(0.55) translateY(36px); }
+      55%  { opacity: 1; transform: scale(1.07) translateY(-8px); }
+      75%  { transform: scale(0.97) translateY(2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .winner-box {
+      animation: springIn 0.75s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+    }
+
+    /* --- Improved confetti physics --- */
+    .confetti {
+      position: absolute;
+      border-radius: 2px;
+      pointer-events: none;
+      will-change: transform, opacity;
+      animation: confettiFall var(--dur, 2.4s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translate3d(0, -24px, 0) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      20% {
+        transform: translate3d(var(--drift, 18px), 20vh, 0) rotate(120deg) scale(1.12);
+      }
+      55% {
+        transform: translate3d(calc(var(--drift, 18px) * -0.55), 55vh, 0) rotate(380deg) scale(0.92);
+      }
+      100% {
+        transform: translate3d(var(--drift, 18px), 105vh, 0) rotate(720deg) scale(0.55);
+        opacity: 0;
+      }
+    }
+
+    /* --- Letter-by-letter winner reveal --- */
+    .spin-name.final {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.02em;
+      color: #fbbf24;
+      transform: scale(1.12);
+      animation: none; /* disable the old pulse when using letters */
+    }
+
+    .spin-name.final .letter {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(22px) rotateX(50deg);
+      animation: letterIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      transform-origin: center bottom;
+    }
+
+    @keyframes letterIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+      }
+    }
+
+    /* Soft pulse on the whole name after letters land */
+    .spin-name.final.is-settled {
+      animation: winnerPulse 0.8s ease infinite alternate;
+    }
+
+    /* --- Scroll-driven reveals (historial + filas) --- */
+    @supports (animation-timeline: view()) {
+      .history-item {
+        animation: scrollReveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 35%;
+      }
+
+      @keyframes scrollReveal {
+        from {
+          opacity: 0;
+          transform: translateY(24px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+    }
+
+    /* Stagger moderno (sibling-index) con fallback */
+    #tbody-participantes tr {
+      --stagger: 40ms;
+      opacity: 0;
+      transform: translateX(-10px);
+      animation: rowIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @supports (animation-delay: calc(sibling-index() * 1ms)) {
+      #tbody-participantes tr {
+        animation-delay: calc((sibling-index() - 1) * var(--stagger));
+      }
+    }
+
+    /* Fallback delays already present via nth-child rules above */
+
+    /* --- Button ripple (micro-interaction) --- */
+    .btn {
+      --ripple-x: 50%;
+      --ripple-y: 50%;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at var(--ripple-x) var(--ripple-y),
+        rgba(255, 255, 255, 0.32),
+        transparent 65%
+      );
+      opacity: 0;
+      transition: opacity 0.45s;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+    .btn:active::before {
+      opacity: 1;
+      transition: opacity 0s;
+    }
+
+    /* --- Reduced motion (accesibilidad) --- */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      .spin-overlay,
+      .confetti,
+      .big-draw-btn::before {
+        display: none !important;
+      }
+
+      .spin-name.final .letter {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
       }
     }
   </style>
@@ -1507,46 +1661,55 @@
     });
 
     async function goToView(view) {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById('view-' + view).classList.add('active');
+      const applyView = async () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-' + view).classList.add('active');
 
-      if (view === 'participantes') {
-        // Mostramos lo que ya tenemos en memoria al instante, y actualizamos
-        // en segundo plano — así el cambio de pestaña se siente inmediato.
-        renderParticipantes();
-        setSyncing('sync-participantes', true);
-        fetchParticipantes().then(() => {
-          setSyncing('sync-participantes', false);
+        if (view === 'participantes') {
+          // Mostramos lo que ya tenemos en memoria al instante, y actualizamos
+          // en segundo plano — así el cambio de pestaña se siente inmediato.
           renderParticipantes();
-        });
-      }
-      if (view === 'sorteo') {
-        if (sorteoPool.length || sorteosSesion.length) {
-          // Ya había un sorteo en curso en esta sesión: no se borra nada,
-          // solo restauramos la vista tal cual estaba.
-          if (sorteoPool.length) {
-            updateSorteoConfigCount();
-            showSorteoStep('config');
+          setSyncing('sync-participantes', true);
+          fetchParticipantes().then(() => {
+            setSyncing('sync-participantes', false);
+            renderParticipantes();
+          });
+        }
+        if (view === 'sorteo') {
+          if (sorteoPool.length || sorteosSesion.length) {
+            // Ya había un sorteo en curso en esta sesión: no se borra nada,
+            // solo restauramos la vista tal cual estaba.
+            if (sorteoPool.length) {
+              updateSorteoConfigCount();
+              showSorteoStep('config');
+            } else {
+              showSorteoStep('inicio');
+            }
+            renderSorteosSesion();
           } else {
-            showSorteoStep('inicio');
-          }
-          renderSorteosSesion();
-        } else {
-          document.getElementById('sorteo-nombre').value = '';
-          const sheetsCfg = await fetchSheetsConfig();
-          if (sheetsCfg) {
-            toast('Cargando participantes desde Google Sheets...');
-            const ok = await loadFromSheets(sheetsCfg);
-            if (!ok) showSorteoStep('inicio');
-          } else {
-            showSorteoStep('inicio');
+            document.getElementById('sorteo-nombre').value = '';
+            const sheetsCfg = await fetchSheetsConfig();
+            if (sheetsCfg) {
+              toast('Cargando participantes desde Google Sheets...');
+              const ok = await loadFromSheets(sheetsCfg);
+              if (!ok) showSorteoStep('inicio');
+            } else {
+              showSorteoStep('inicio');
+            }
           }
         }
-      }
-      if (view === 'historial') {
-        renderHistorial();
-        fetchHistorial().then(() => renderHistorial());
+        if (view === 'historial') {
+          renderHistorial();
+          fetchHistorial().then(() => renderHistorial());
+        }
+      };
+
+      // View Transitions API: morph suave entre pestañas (fallback automático)
+      if (document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.startViewTransition(() => applyView());
+      } else {
+        await applyView();
       }
     }
 
@@ -2208,13 +2371,32 @@
       const nameEl = document.getElementById('spin-name');
       const labelEl = document.getElementById('spin-label');
       const trophyEl = document.getElementById('spin-trophy');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      nameEl.classList.remove('final');
+      nameEl.classList.remove('final', 'is-settled');
+      nameEl.innerHTML = '';
+      nameEl.style.transform = '';
       trophyEl.classList.remove('show');
       labelEl.textContent = 'Sorteando...';
       overlay.classList.add('active');
 
       overlay.querySelectorAll('.confetti').forEach(c => c.remove());
+
+      if (reduceMotion) {
+        // Accesibilidad: mostrar resultado directo sin animación
+        const winnerText = ganadores.length === 1
+          ? ganadores[0].apellidoNombre
+          : ganadores.map(g => g.apellidoNombre).join(' · ');
+        nameEl.textContent = winnerText;
+        nameEl.classList.add('final', 'is-settled');
+        labelEl.textContent = ganadores.length === 1 ? '¡Ganador!' : '¡Ganadores!';
+        trophyEl.classList.add('show');
+        setTimeout(() => {
+          overlay.classList.remove('active');
+          onDone();
+        }, 900);
+        return;
+      }
 
       const nombres = participantes.map(p => p.apellidoNombre);
       let ticks = 0;
@@ -2234,32 +2416,58 @@
           const winnerText = ganadores.length === 1
             ? ganadores[0].apellidoNombre
             : ganadores.map(g => g.apellidoNombre).join(' · ');
-          nameEl.textContent = winnerText;
+
+          // Letter-by-letter reveal
+          nameEl.innerHTML = '';
+          const chars = [...winnerText];
+          chars.forEach((ch, i) => {
+            const span = document.createElement('span');
+            span.className = 'letter';
+            span.textContent = ch === ' ' ? '\u00A0' : ch;
+            span.style.animationDelay = (i * 0.028) + 's';
+            nameEl.appendChild(span);
+          });
           nameEl.classList.add('final');
+
           labelEl.textContent = ganadores.length === 1 ? '¡Ganador!' : '¡Ganadores!';
           trophyEl.classList.add('show');
           lanzarConfetti(overlay);
 
+          // Después de que aterrizan las letras, activar pulse suave
+          const settleDelay = Math.min(900, 280 + chars.length * 28);
+          setTimeout(() => nameEl.classList.add('is-settled'), settleDelay);
+
           setTimeout(() => {
             overlay.classList.remove('active');
             onDone();
-          }, 2200);
+          }, 2400);
         }
       }
       tick();
     }
 
     function lanzarConfetti(container) {
-      const colors = ['#fbbf24', '#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6'];
-      for (let i = 0; i < 50; i++) {
+      const colors = ['#fbbf24', '#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6', '#ffffff'];
+      const count = 64;
+      for (let i = 0; i < count; i++) {
         const c = document.createElement('div');
         c.className = 'confetti';
+        const size = 5 + Math.random() * 9;
+        const drift = (Math.random() * 90 - 45).toFixed(1) + 'px';
+        const dur = (1.9 + Math.random() * 1.5).toFixed(2) + 's';
         c.style.left = Math.random() * 100 + 'vw';
         c.style.background = colors[Math.floor(Math.random() * colors.length)];
-        c.style.width = (6 + Math.random() * 8) + 'px';
-        c.style.height = (6 + Math.random() * 8) + 'px';
-        c.style.animationDelay = (Math.random() * 0.4) + 's';
-        c.style.animationDuration = (1.8 + Math.random() * 1.2) + 's';
+        c.style.width = size + 'px';
+        c.style.height = (size * (0.6 + Math.random() * 0.8)) + 'px';
+        c.style.setProperty('--drift', drift);
+        c.style.setProperty('--dur', dur);
+        c.style.animationDelay = (Math.random() * 0.35) + 's';
+        // Algunas piezas más "cinta" (rectángulos alargados)
+        if (Math.random() > 0.7) {
+          c.style.borderRadius = '1px';
+          c.style.width = (3 + Math.random() * 4) + 'px';
+          c.style.height = (10 + Math.random() * 8) + 'px';
+        }
         container.appendChild(c);
       }
     }
@@ -2581,6 +2789,17 @@
     document.getElementById('modal').addEventListener('click', e => {
       if (e.target === document.getElementById('modal')) closeModal();
     });
+
+    // ========== MICRO-INTERACTIONS (ripple) ==========
+    document.addEventListener('pointerdown', e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const rect = btn.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      btn.style.setProperty('--ripple-x', x + '%');
+      btn.style.setProperty('--ripple-y', y + '%');
+    }, { passive: true });
 
     // ========== INICIO ==========
     checkAdminSession();
