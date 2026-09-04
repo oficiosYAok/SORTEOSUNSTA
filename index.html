@@ -57,13 +57,11 @@
       gap: 0.85rem;
     }
 
-    .header-title-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      text-align: center;
-    }
+   .header-title-row {
+  display: flex !important;
+  flex-direction: column !important; /* Fuerza a que se pongan uno abajo del otro */
+  align-items: center;               /* Centra los textos */
+}
 
     .header-logo {
       height: 48px;
@@ -89,7 +87,12 @@
       font-weight: 700;
       letter-spacing: -0.02em;
     }
-
+.header-subtitle {
+  display: block;
+  font-size: 14px;      /* Letra más chica */
+  font-weight: normal;  /* Menos gruesa */
+  color: #555;          /* Color un poco más suave */
+}
     header h1 span {
       font-weight: 400;
       opacity: 0.9;
@@ -927,11 +930,7 @@
         <img class="header-logo" src="LOGO-2.png" alt="Logo UNSTA" onerror="this.style.display='none'" />
       <div class="header-title-row">
   <h1>Sorteos UNSTA</h1>
-  <!-- El <br> obliga a bajar, y el style achica la letra -->
-  <br> 
-  <span style="font-size: 16px; display: block; font-weight: normal; color: #666;">
-    Universidad del Norte Santo Tomás de Aquino
-  </span>
+ <h2 class="header-subtitle">Universidad del Norte Santo Tomás de Aquino</h2>
 </div>
 <div class="header-nav-row">
         <nav>
